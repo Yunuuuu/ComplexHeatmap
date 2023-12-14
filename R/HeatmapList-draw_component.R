@@ -629,7 +629,7 @@ setMethod(
 
         pushViewport(viewport(x = x, y = unit(0, "npc"), width = heatmap_width[i], just = c("left", "bottom"), name = paste0("heatmap_", object@ht_list[[i]]@name)))
         if (inherits(ht, "Heatmap")) {
-          draw(ht, internal = TRUE)
+          draw_heatmap_internal(ht)
         } else if (inherits(ht, "HeatmapAnnotation")) {
           # if the HeatmapAnnotation contains anno_mark() and it is split into more than one slices
           anno_mark_param <- list()
@@ -717,7 +717,7 @@ setMethod(
 
         pushViewport(viewport(y = y, x = unit(0, "npc"), height = heatmap_height[i], just = c("left", "top"), name = paste0("heatmap_", object@ht_list[[i]]@name)))
         if (inherits(ht, "Heatmap")) {
-          draw(ht, internal = TRUE)
+          draw_heatmap_internal(ht)
         } else if (inherits(ht, "HeatmapAnnotation")) {
           # if the HeatmapAnnotation contains anno_mark() and it is split into more than one slices
           anno_mark_param <- list()

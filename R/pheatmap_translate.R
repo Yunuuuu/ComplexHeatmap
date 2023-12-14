@@ -500,21 +500,29 @@ pheatmap <- function(
 # compare_pheatmap(mat)
 
 
+
+
+
+
+
+
 #' Compare heatmaps between pheatmap::pheatmap() and ComplexHeatmap::pheatmap()
-#'
+#' 
 #' Compare heatmaps between pheatmap::pheatmap() and ComplexHeatmap::pheatmap()
-#'
+#' 
 #' The function plots two heatmaps, one by \code{pheatmap::pheatmap} and one by
 #' \code{ComplexHeatmap::pheatmap}. Users can see the difference between the
 #' two implementations.
-#'
+#' 
 #' @param ... The same set of arguments passed to \code{pheatmap::pheatmap} and
 #' \code{ComplexHeatmap::pheatmap}.
 #' @examples
-#'
-#' mat <- matrix(rnorm(100), 10)
+#' 
+#' 
+#' mat = matrix(rnorm(100), 10)
 #' compare_pheatmap(mat)
-#'
+#' 
+#' 
 compare_pheatmap <- function(...) {
   if (!requireNamespace("pheatmap")) {
     stop_wrap("pheatmap package should be installed.")

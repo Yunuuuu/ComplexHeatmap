@@ -96,17 +96,26 @@ subset_heatmap_by_column <- function(ht, ind) {
 #
 
 
+
+
+
+
+
+
 #' Dimension of the Heatmap
-#'
+#' 
 #' Dimension of the Heatmap
-#'
-#'
+#' 
+#' 
 #' @param x A \code{\link{Heatmap-class}} object.
 #' @examples
-#'
+#' 
+#' 
 #' # There is no example
 #' NULL
-#'
+#' 
+#' 
+#' 
 dim.Heatmap <- function(x) {
   dim(x@matrix)
 }

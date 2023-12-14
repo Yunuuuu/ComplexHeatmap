@@ -270,21 +270,29 @@ heatmap <- function(x,
 # compare_heatmap(mat)
 
 
+
+
+
+
+
+
 #' Compare heatmaps between stats::heatmap() and ComplexHeatmap::heatmap()
-#'
+#' 
 #' Compare heatmaps between stats::heatmap() and ComplexHeatmap::heatmap()
-#'
+#' 
 #' The function plots two heatmaps, one by \code{stats::heatmap} and one by
 #' \code{ComplexHeatmap::heatmap}. Users can see the difference between the two
 #' implementations.
-#'
+#' 
 #' @param ... The same set of arguments passed to \code{stats::heatmap} and
 #' \code{ComplexHeatmap::heatmap}.
 #' @examples
-#'
-#' mat <- matrix(rnorm(100), 10)
+#' 
+#' 
+#' mat = matrix(rnorm(100), 10)
 #' compare_heatmap(mat)
-#'
+#' 
+#' 
 compare_heatmap <- function(...) {
   p1 <- gridGraphics::echoGrob(function() stats::heatmap(...))
   p2 <- grid.grabExpr(draw(heatmap(...)))
@@ -880,21 +888,29 @@ heatmap.2 <- function(
 # compare_heatmap.2(mat)
 
 
+
+
+
+
+
+
 #' Compare heatmaps between gplots::heatmap.2() and ComplexHeatmap::heatmap()
-#'
+#' 
 #' Compare heatmaps between gplots::heatmap.2() and ComplexHeatmap::heatmap()
-#'
+#' 
 #' The function plots two heatmaps, one by \code{gplots::heatmap.2} and one by
 #' \code{ComplexHeatmap::heatmap.2}. Users can see the difference between the
 #' two implementations.
-#'
+#' 
 #' @param ... The same set of arguments passed to \code{gplots::heatmap.2} and
 #' \code{ComplexHeatmap::heatmap.2}.
 #' @examples
-#'
-#' mat <- matrix(rnorm(100), 10)
+#' 
+#' 
+#' mat = matrix(rnorm(100), 10)
 #' compare_heatmap.2(mat)
-#'
+#' 
+#' 
 compare_heatmap.2 <- function(...) {
   p1 <- gridGraphics::echoGrob(function() gplots::heatmap.2(...))
   p2 <- grid.grabExpr(draw(heatmap.2(...)))

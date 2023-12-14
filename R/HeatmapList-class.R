@@ -1,23 +1,4 @@
-# == title
-# Class for a list of heatmaps
-#
-# == details
-# A heatmap list is defined as a list of heatmaps and annotations.
-#
-# == methods
-# The `HeatmapList-class` provides following methods:
-#
-# - `draw,HeatmapList-method`: draw the list of heatmaps and row annotations.
-# - `add_heatmap,HeatmapList-method`: add heatmaps to the list of heatmaps.
-# - `row_order,HeatmapList-method`: get order of rows
-# - `column_order,HeatmapList-method`: get order of columns
-# - `row_dend,HeatmapList-method`: get row dendrograms
-# - `column_dend,HeatmapList-method`: get column dendrograms
-#
-# == author
-# Zuguang Gu <z.gu@dkfz.de>
-#
-HeatmapList <- setClass("HeatmapList",
+methods::setClass("HeatmapList",
   slots = list(
     ht_list = "list",
     ht_list_param = "list",
@@ -53,43 +34,11 @@ HeatmapList <- setClass("HeatmapList",
   contains = "AdditiveUnit"
 )
 
-# == title
-# Constructor method for HeatmapList class
-#
-# == param
-# -... arguments
-#
-# == details
-# There is no public constructor method for the `HeatmapList-class`.
-#
-# == value
-# No value is returned.
-#
-# == author
-# Zuguang Gu <z.gu@dkfz.de>
-#
 HeatmapList <- function(...) {
   new("HeatmapList", ...)
 }
 
-# == title
-# Add heatmaps and row annotations to the heatmap list
-#
-# == param
-# -object a `HeatmapList-class` object.
-# -x a `Heatmap-class` object or a `HeatmapAnnotation-class` object or a `HeatmapList-class` object.
-# -direction direction of the concatenation.
-#
-# == details
-# There is a shortcut function ``+.AdditiveUnit``.
-#
-# == value
-# A `HeatmapList-class` object.
-#
-# == author
-# Zuguang Gu <z.gu@dkfz.de>
-#
-setMethod(
+methods::setMethod(
   f = "add_heatmap",
   signature = "HeatmapList",
   definition = function(object, x, direction = c("horizontal", "vertical")) {
@@ -194,115 +143,6 @@ setMethod(
   }
 )
 
-
-# == title
-# Draw a list of heatmaps
-#
-# == param
-# -object a `HeatmapList-class` object.
-# -newpage whether create a new page for the graphics. If you want to arrange multiple plots in one page, I suggest to use `grid::grid.grabExpr`.
-# -background Background color of the whole plot.
-# -row_title title on the row.
-# -row_title_side will the title be put on the left or right of the heatmap.
-# -row_title_gp graphic parameters for drawing text.
-# -column_title title on the column.
-# -column_title_side will the title be put on the top or bottom of the heatmap.
-# -column_title_gp graphic parameters for drawing text.
-# -heatmap_legend_side side to put heatmap legend
-# -merge_legends merge heatmap legends and annotation legends to put into one column.
-# -show_heatmap_legend whether show all heatmap legends
-# -heatmap_legend_list use-defined legends which are put after the heatmap legends
-# -annotation_legend_side side of the annotation legends
-# -show_annotation_legend whether show annotation legends
-# -annotation_legend_list user-defined legends which are put after the annotation legends
-# -align_heatmap_legend How to align the legends to heatmap. Possible values are "heatmap_center", "heatmap_top" and "global_center". If the value is ``NULL``,
-#           it automatically picks the proper value from the three options.
-# -align_annotation_legend  How to align the legends to heatmap. Possible values are "heatmap_center", "heatmap_top" and "global_center".
-# -legend_grouping How the legends are grouped. Values should be "adjusted" or "original". If it is set as
-#             "original", all annotation legends are grouped together.
-# -gap gap between heatmaps/annotations
-# -ht_gap same as ``gap``.
-# -main_heatmap index of main heatmap. The value can be a numeric index or the heatmap name
-# -padding padding of the whole plot. The value is a unit vector of length 4, which corresponds to bottom, left, top and right.
-# -adjust_annotation_extension whether take annotation name into account when calculating positions of graphic elements.
-# -auto_adjust whether apply automatic adjustment? The auto-adjustment includes turning off dendrograms, titles and row/columns for non-main heatmaps.
-# -row_dend_side side of the dendrogram from the main heatmap
-# -row_sub_title_side side of the row title from the main heatmap
-# -column_dend_side side of the dendrogram from the main heatmap
-# -column_sub_title_side side of the column title from the main heatmap
-# -row_gap this modifies ``row_gap`` of the main heatmap
-# -cluster_rows this modifies ``cluster_rows`` of the main heatmap
-# -cluster_row_slices this modifies ``cluster_row_slices`` of the main heatmap
-# -clustering_distance_rows this modifies ``clustering_distance_rows`` of the main heatmap
-# -clustering_method_rows this modifies ``clustering_method_rows`` of the main heatmap
-# -row_dend_width this modifies ``row_dend_width`` of the main heatmap
-# -show_row_dend this modifies ``show_row_dend`` of the main heatmap
-# -row_dend_reorder this modifies ``row_dend_reorder`` of the main heatmap
-# -row_dend_gp this modifies ``row_dend_gp`` of the main heatmap
-# -row_order this modifies ``row_order`` of the main heatmap
-# -km = this modifies ``km`` of the main heatmap
-# -split this modifies ``split`` of the main heatmap
-# -row_km this modifies ``row_km`` of the main heatmap
-# -row_km_repeats this modifies ``row_km_repeats`` of the main heatmap
-# -row_split this modifies ``row_split`` of the main heatmap
-# -height this modifies ``height`` of the main heatmap
-# -heatmap_height this modifies ``heatmap_height`` of the main heatmap
-# -column_gap this modifies ``column_gap`` of the main heatmap
-# -cluster_columns this modifies ``cluster_columns`` of the main heatmap
-# -cluster_column_slices this modifies ``cluster_column_slices`` of the main heatmap
-# -clustering_distance_columns this modifies ``clustering_distance_columns`` of the main heatmap
-# -clustering_method_columns this modifies ``clustering_method_columns`` of the main heatmap
-# -column_dend_width this modifies ``column_dend_width`` of the main heatmap
-# -show_column_dend this modifies ``show_column_dend`` of the main heatmap
-# -column_dend_reorder this modifies ``column_dend_reorder`` of the main heatmap
-# -column_dend_gp this modifies ``column_dend_gp`` of the main heatmap
-# -column_order this modifies ``column_order`` of the main heatmap
-# -column_km this modifies ``column_km`` of the main heatmap
-# -column_km_repeats this modifies ``column_km_repeats`` of the main heatmap
-# -column_split this modifies ``column_split`` of the main heatmap
-# -width this modifies ``width`` of the main heatmap
-# -heatmap_width this modifies ``heatmap_width`` of the main heatmap
-# -use_raster this modifies ``use_raster`` of every heatmap.
-# -raster_device this modifies ``raster_device`` of every heatmap.
-# -raster_quality this modifies ``raster_quality`` of every heatmap.
-# -raster_device_param this modifies ``raster_device_param`` of every heatmap.
-# -raster_resize this modifies ``raster_resize`` of every heatmap.
-# -post_fun A self-defined function will be executed after all the heatmaps are drawn.
-# -save_last Whether to save the last plot?
-# -heatmap_row_names_gp  this set the value in `ht_opt` and reset back after the plot is done
-# -heatmap_column_names_gp this set the value in `ht_opt` and reset back after the plot is done
-# -heatmap_row_title_gp this set the value in `ht_opt` and reset back after the plot is done
-# -heatmap_column_title_gp this set the value in `ht_opt` and reset back after the plot is done
-# -legend_title_gp this set the value in `ht_opt` and reset back after the plot is done
-# -legend_title_position this set the value in `ht_opt` and reset back after the plot is done
-# -legend_labels_gp this set the value in `ht_opt` and reset back after the plot is done
-# -legend_grid_height this set the value in `ht_opt` and reset back after the plot is done
-# -legend_grid_width  this set the value in `ht_opt` and reset back after the plot is done
-# -legend_border this set the value in `ht_opt` and reset back after the plot is done
-# -legend_gap Gap between legends. The value should be a vector of two units. One for gaps between
-#         vertical legends and one for the horizontal legends. If only one single unit is specified,
-#         the same gap set for the vertical and horizontal legends.
-# -heatmap_border this set the value in `ht_opt` and reset back after the plot is done
-# -annotation_border  this set the value in `ht_opt` and reset back after the plot is done
-# -fastcluster this set the value in `ht_opt` and reset back after the plot is done
-# -simple_anno_size  this set the value in `ht_opt` and reset back after the plot is done
-# -show_parent_dend_line this set the value in `ht_opt` and reset back after the plot is done
-#
-# == detail
-# The function first calls `make_layout,HeatmapList-method` to calculate
-# the layout of the heatmap list and the layout of every single heatmap,
-# then makes the plot by re-calling the graphic functions which are already recorded
-# in the layout.
-#
-# == seealso
-# https://jokergoo.github.io/ComplexHeatmap-reference/book/a-list-of-heatmaps.html
-#
-# == value
-# This function returns a `HeatmapList-class` object for which the layout has been created.
-#
-# == author
-# Zuguang Gu <z.gu@dkfz.de>
-#
 setMethod(
   f = "draw",
   signature = "HeatmapList",

@@ -61,18 +61,24 @@
 # densityHeatmap(matrix, top_annotation = ha) \%v\% Heatmap(matrix, height = unit(6, "cm"))
 
 
+
+
+
+
+
+
 #' Visualize Density Distribution by Heatmap
-#'
+#' 
 #' Visualize Density Distribution by Heatmap
-#'
+#' 
 #' To visualize data distribution in a matrix or in a list, we normally use
 #' boxplot or violinplot. We can also use colors to map the density values and
 #' visualize distribution of values through a heatmap. It is useful if you have
 #' huge number of columns in \code{data} to visualize.
-#'
+#' 
 #' The density matrix is generated with 500 rows ranging between the maximun
 #' and minimal values in all densities.
-#'
+#' 
 #' @param data A matrix or a list. If it is a matrix, density is calculated by
 #' columns.
 #' @param density_param Parameters send to \code{\link[stats]{density}},
@@ -108,25 +114,24 @@
 #' @param ... Pass to \code{\link{Heatmap}}.
 #' @return A \code{\link{Heatmap-class}} object. It can oly add other
 #' heatmaps/annotations vertically.
-#' @author Zuguang Gu <z.gu@@dkfz.de>
+#' @author Zuguang Gu \href{mailto:z.gu@@dkfz.dez.gu@@dkfz.de}
 #' @seealso
 #' \url{https://jokergoo.github.io/ComplexHeatmap-reference/book/other-high-level-plots.html#density-heatmap}
 #' @examples
-#'
-#' matrix <- matrix(rnorm(100), 10)
-#' colnames(matrix) <- letters[1:10]
+#' 
+#' 
+#' matrix = matrix(rnorm(100), 10); colnames(matrix) = letters[1:10]
 #' densityHeatmap(matrix)
-#'
-#' lt <- list(rnorm(10), rnorm(10))
+#' 
+#' lt = list(rnorm(10), rnorm(10))
 #' densityHeatmap(lt)
-#'
-#' ha <- HeatmapAnnotation(
-#'   points = anno_points(runif(10)),
-#'   anno = rep(c("A", "B"), each = 5), col = list(anno = c("A" = "red", "B" = "blue"))
-#' )
+#' 
+#' ha = HeatmapAnnotation(points = anno_points(runif(10)),
+#'     anno = rep(c("A", "B"), each = 5), col = list(anno = c("A" = "red", "B" = "blue")))
 #' densityHeatmap(matrix, top_annotation = ha)
 #' densityHeatmap(matrix, top_annotation = ha) %v% Heatmap(matrix, height = unit(6, "cm"))
-#'
+#' 
+#' 
 densityHeatmap <- function(data,
                            density_param = list(na.rm = TRUE),
                            col = rev(brewer.pal(11, "Spectral")),

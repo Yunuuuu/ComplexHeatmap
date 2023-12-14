@@ -1,4 +1,91 @@
 # special case: the matrix can have no row names
+
+
+#' Complement Set Size
+#' 
+#' Complement Set Size
+#' 
+#' 
+#' @param m A combination matrix returned by \code{\link{make_comb_mat}}.
+#' @param degree degree of the intersection. The value can be a vector.
+#' @return If there is no complement set, it returns zero.
+#' 
+#' If there is no complement set, it returns zero.
+#' 
+#' If there is no complement set, it returns zero.
+#' 
+#' A vector of sizes of the combination sets.
+#' 
+#' A vector of sizes of the combination sets.
+#' 
+#' A vector of sizes of the combination sets.
+#' @examples
+#' 
+#' 
+#' # There is no example
+#' NULL
+#' 
+#' 
+#' Complement Set Size
+#' 
+#' Complement Set Size
+#' 
+#' 
+#' 
+#' # There is no example
+#' NULL
+#' 
+#' 
+#' Complement Set Size
+#' 
+#' Complement Set Size
+#' 
+#' 
+#' 
+#' # There is no example
+#' NULL
+#' 
+#' 
+#' Sizes of the Combination sets
+#' 
+#' Sizes of the Combination sets
+#' 
+#' 
+#' 
+#' set.seed(123)
+#' lt = list(a = sample(letters, 10),
+#'           b = sample(letters, 15),
+#'           c = sample(letters, 20))
+#' m = make_comb_mat(lt)
+#' comb_size(m)
+#' 
+#' Sizes of the Combination sets
+#' 
+#' Sizes of the Combination sets
+#' 
+#' 
+#' 
+#' set.seed(123)
+#' lt = list(a = sample(letters, 10),
+#'           b = sample(letters, 15),
+#'           c = sample(letters, 20))
+#' m = make_comb_mat(lt)
+#' comb_size(m)
+#' 
+#' Sizes of the Combination sets
+#' 
+#' Sizes of the Combination sets
+#' 
+#' 
+#' 
+#' set.seed(123)
+#' lt = list(a = sample(letters, 10),
+#'           b = sample(letters, 15),
+#'           c = sample(letters, 20))
+#' m = make_comb_mat(lt)
+#' comb_size(m)
+#' 
+#' 
 make_comb_mat_from_matrix <- function(x, mode, top_n_sets = Inf, min_set_size = -Inf,
                                       universal_set = NULL, complement_size = NULL, set_on_rows = TRUE) {
   # check whether x is a binary matrix
@@ -69,6 +156,36 @@ make_comb_mat_from_matrix <- function(x, mode, top_n_sets = Inf, min_set_size = 
       #' NULL
       #'
       #'
+
+
+      #' Complement Set Size
+      #'
+      #' Complement Set Size
+      #'
+      #'
+      #' @param m A combination matrix returned by \code{\link{make_comb_mat}}.
+      #' @return If there is no complement set, it returns zero.
+      #' @examples
+      #'
+      #' # There is no example
+      #' NULL
+      #'
+      #'
+
+
+#' Complement Set Size
+#' 
+#' Complement Set Size
+#' 
+#' 
+#' @param m A combination matrix returned by \code{\link{make_comb_mat}}.
+#' @return If there is no complement set, it returns zero.
+#' @examples
+#' 
+#' # There is no example
+#' NULL
+#' 
+#' 
       complement_size <- k
     }
   }
@@ -109,6 +226,44 @@ make_comb_mat_from_matrix <- function(x, mode, top_n_sets = Inf, min_set_size = 
     #' m = make_comb_mat(lt)
     #' comb_size(m)
     #'
+
+
+    #' Sizes of the Combination sets
+    #'
+    #' Sizes of the Combination sets
+    #'
+    #'
+    #' @param m A combination matrix returned by \code{\link{make_comb_mat}}.
+    #' @param degree degree of the intersection. The value can be a vector.
+    #' @return A vector of sizes of the combination sets.
+    #' @examples
+    #'
+    #' set.seed(123)
+    #' lt = list(a = sample(letters, 10),
+    #'           b = sample(letters, 15),
+    #'           c = sample(letters, 20))
+    #' m = make_comb_mat(lt)
+    #' comb_size(m)
+    #'
+
+
+#' Sizes of the Combination sets
+#' 
+#' Sizes of the Combination sets
+#' 
+#' 
+#' @param m A combination matrix returned by \code{\link{make_comb_mat}}.
+#' @param degree degree of the intersection. The value can be a vector.
+#' @return A vector of sizes of the combination sets.
+#' @examples
+#' 
+#' set.seed(123)
+#' lt = list(a = sample(letters, 10),
+#'           b = sample(letters, 15),
+#'           c = sample(letters, 20))
+#' m = make_comb_mat(lt)
+#' comb_size(m)
+#' 
     comb_size <- table(apply(x, 1, binaryToInt))
   } else {
     comb_size <- table(unlist(apply(x, 1, function(code) {
@@ -726,31 +881,37 @@ comb_size <- function(m, degree = NULL) {
 # comb_name(m, readable = TRUE)
 
 
+
+
+
+
+
+
 #' Names of the Combination sets
-#'
+#' 
 #' Names of the Combination sets
-#'
+#' 
 #' The name of the combination sets are formatted as a string of binary bits.
 #' E.g. for three sets of "a", "b", "c", the combination set with name "101"
 #' corresponds to select set a, not select set b and select set c. The
 #' definition of "select" depends on the value of \code{mode} from
 #' \code{\link{make_comb_mat}}.
-#'
+#' 
 #' @param m A combination matrix returned by \code{\link{make_comb_mat}}.
 #' @param readable Whether the combination represents as e.g. "A&B&C".
 #' @return A vector of names of the combination sets.
 #' @examples
-#'
+#' 
+#' 
 #' set.seed(123)
-#' lt <- list(
-#'   a = sample(letters, 10),
-#'   b = sample(letters, 15),
-#'   c = sample(letters, 20)
-#' )
-#' m <- make_comb_mat(lt)
+#' lt = list(a = sample(letters, 10),
+#'           b = sample(letters, 15),
+#'           c = sample(letters, 20))
+#' m = make_comb_mat(lt)
 #' comb_name(m)
 #' comb_name(m, readable = TRUE)
-#'
+#' 
+#' 
 comb_name <- function(m, readable = FALSE) {
   set_on_rows <- attr(m, "param")$set_on_rows
   if (set_on_rows) {
@@ -806,25 +967,31 @@ comb_name <- function(m, readable = FALSE) {
 # comb_degree(m)
 
 
+
+
+
+
+
+
 #' Degrees of the Combination sets
-#'
+#' 
 #' Degrees of the Combination sets
-#'
+#' 
 #' The degree for a combination set is the number of sets that are selected.
-#'
+#' 
 #' @param m A combination matrix returned by \code{\link{make_comb_mat}}.
 #' @return A vector of degrees of the combination sets.
 #' @examples
-#'
+#' 
+#' 
 #' set.seed(123)
-#' lt <- list(
-#'   a = sample(letters, 10),
-#'   b = sample(letters, 15),
-#'   c = sample(letters, 20)
-#' )
-#' m <- make_comb_mat(lt)
+#' lt = list(a = sample(letters, 10),
+#'           b = sample(letters, 15),
+#'           c = sample(letters, 20))
+#' m = make_comb_mat(lt)
 #' comb_degree(m)
-#'
+#' 
+#' 
 comb_degree <- function(m) {
   set_on_rows <- attr(m, "param")$set_on_rows
   if (set_on_rows) {
@@ -854,26 +1021,32 @@ comb_degree <- function(m) {
 # extract_comb(m, "110")
 
 
+
+
+
+
+
+
 #' Extract Elements in a Combination set
-#'
+#' 
 #' Extract Elements in a Combination set
-#'
+#' 
 #' It returns the combination set.
-#'
+#' 
 #' @param m A combination matrix returned by \code{\link{make_comb_mat}}.
 #' @param comb_name The valid combination set name should be from
 #' \code{\link{comb_name}}.
 #' @examples
-#'
+#' 
+#' 
 #' set.seed(123)
-#' lt <- list(
-#'   a = sample(letters, 10),
-#'   b = sample(letters, 15),
-#'   c = sample(letters, 20)
-#' )
-#' m <- make_comb_mat(lt)
+#' lt = list(a = sample(letters, 10),
+#'           b = sample(letters, 15),
+#'           c = sample(letters, 20))
+#' m = make_comb_mat(lt)
 #' extract_comb(m, "110")
-#'
+#' 
+#' 
 extract_comb <- function(m, comb_name) {
   if (length(comb_name) != 1) {
     stop_wrap("`comb_name` should be length one.")

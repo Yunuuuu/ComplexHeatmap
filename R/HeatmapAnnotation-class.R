@@ -557,22 +557,31 @@ rowAnnotation <- function(...) {
 #
 
 
+
+
+
+
+
+
 #' Construct Column Annotations
-#'
+#' 
 #' Construct Column Annotations
-#'
+#' 
 #' The function is identical to
-#'
+#' 
 #' \preformatted{ HeatmapAnnotation(..., which = "column") }
-#'
+#' 
 #' @param ... Pass to \code{\link{HeatmapAnnotation}}.
 #' @return A \code{\link{HeatmapAnnotation-class}} object.
-#' @author Zuguang Gu <z.gu@@dkfz.de>
+#' @author Zuguang Gu \href{mailto:z.gu@@dkfz.dez.gu@@dkfz.de}
 #' @examples
-#'
+#' 
+#' 
 #' # There is no example
 #' NULL
-#'
+#' 
+#' 
+#' 
 columnAnnotation <- function(...) {
   HeatmapAnnotation(..., which = "column")
 }
@@ -922,24 +931,32 @@ setMethod(
 # ha
 
 
+
+
+
+
+
+
 #' Concatenate Heatmap Annotations
-#'
+#' 
 #' Concatenate Heatmap Annotations
-#'
+#' 
 #' The heatmap annotations should have same number of observations.
-#'
+#' 
 #' @param ... \code{\link{HeatmapAnnotation-class}} objects.
 #' @param gap Gap between the groups of annotations.
 #' @examples
-#'
-#' ha1 <- HeatmapAnnotation(foo = 1:10)
-#' ha2 <- HeatmapAnnotation(bar = anno_points(10:1))
-#' ha <- c(ha1, ha2)
+#' 
+#' 
+#' ha1 = HeatmapAnnotation(foo = 1:10)
+#' ha2 = HeatmapAnnotation(bar = anno_points(10:1))
+#' ha = c(ha1, ha2)
 #' ha
-#' ha3 <- HeatmapAnnotation(sth = cbind(1:10, 10:1))
-#' ha <- c(ha1, ha2, ha3, gap = unit(c(1, 4), "mm"))
+#' ha3 = HeatmapAnnotation(sth = cbind(1:10, 10:1))
+#' ha = c(ha1, ha2, ha3, gap = unit(c(1, 4), "mm"))
 #' ha
-#'
+#' 
+#' 
 c.HeatmapAnnotation <- function(..., gap = unit(1, "points")) {
   anno_list <- list(...)
   if (length(anno_list) == 1) {

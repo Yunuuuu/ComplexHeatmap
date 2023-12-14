@@ -1,25 +1,4 @@
-# == title
-# Make the Layout of a Single Heatmap
-#
-# == param
-# -object A `Heatmap-class` object.
-#
-# == detail
-# The layout of the single heatmap will be established by setting the size of each heatmap component.
-# Also how to make graphics for heatmap components will be recorded by saving as functions.
-#
-# Whether to apply row clustering or column clustering affects the layout, so clustering should be applied
-# first by `prepare,Heatmap-method` before making the layout.
-#
-# This function is only for internal use.
-#
-# == value
-# A `Heatmap-class` object.
-#
-# == author
-# Zuguang Gu <z.gu@dkfz.de>
-#
-setMethod(
+methods::setMethod(
   f = "make_layout",
   signature = "Heatmap",
   definition = function(object) {
@@ -34,25 +13,32 @@ setMethod(
     nr_slice <- length(object@row_order_list)
     nc_slice <- length(object@column_order_list)
 
-    snr <- sapply(object@row_order_list, length)
-    snc <- sapply(object@column_order_list, length)
+    snr <- vapply(object@row_order_list, length, integer(1L))
+    snc <- vapply(object@column_order_list, length, integer(1L))
     if (nr_slice == 1) {
       slice_height <- unit(1, "npc")
     } else {
-      slice_height <- (unit(1, "npc") - sum(row_gap[seq_len(nr_slice - 1)])) * (snr / sum(snr))
+      slice_height <- (unit(1, "npc") - sum(row_gap[seq_len(nr_slice - 1)])) *
+        (snr / sum(snr))
     }
     for (i in seq_len(nr_slice)) {
       if (i == 1) {
         slice_y <- unit(1, "npc")
       } else {
-        slice_y <- unit.c(slice_y, unit(1, "npc") - sum(slice_height[seq_len(i - 1)]) - sum(row_gap[seq_len(i - 1)]))
+        slice_y <- unit.c(
+          slice_y,
+          unit(1, "npc") -
+            sum(slice_height[seq_len(i - 1)]) -
+            sum(row_gap[seq_len(i - 1)])
+        )
       }
     }
 
     if (nc_slice == 1) {
       slice_width <- unit(1, "npc")
     } else {
-      slice_width <- (unit(1, "npc") - sum(column_gap[seq_len(nc_slice - 1)])) * (snc / sum(snc))
+      slice_width <- (unit(1, "npc") - sum(column_gap[seq_len(nc_slice - 1)])) *
+        (snc / sum(snc))
     }
     for (i in seq_len(nc_slice)) {
       if (i == 1) {
@@ -76,7 +62,11 @@ setMethod(
       object@layout$graphic_fun_list <- list(function(object) {
         for (i in seq_len(nr_slice)) {
           for (j in seq_len(nc_slice)) {
-            draw_heatmap_body(object, kr = i, kc = j, x = slice_x[j], y = slice_y[i], width = slice_width[j], height = slice_height[i], just = c("left", "top"))
+            draw_heatmap_body(object,
+              kr = i, kc = j, x = slice_x[j],
+              y = slice_y[i], width = slice_width[j], height = slice_height[i],
+              just = c("left", "top")
+            )
           }
         }
       })
@@ -510,22 +500,6 @@ setMethod(
   }
 )
 
-# == title
-# Draw the Single Heatmap with Defaults
-#
-# == param
-# -object A `Heatmap-class` object.
-#
-# == details
-# It actually calls `draw,Heatmap-method`, but only with default parameters. If users want to customize the heatmap,
-# they can pass parameters directly to `draw,Heatmap-method`.
-#
-# == value
-# The `HeatmapList-class` object.
-#
-# == author
-# Zuguang Gu <z.gu@dkfz.de>
-#
 setMethod(
   f = "show",
   signature = "Heatmap",
@@ -534,58 +508,6 @@ setMethod(
   }
 )
 
-# == title
-# Add Heatmap to the Heatmap List
-#
-# == param
-# -object A `Heatmap-class` object.
-# -x a `Heatmap-class` object, a `HeatmapAnnotation-class` object or a `HeatmapList-class` object.
-# -direction Whether the heatmap is added horizontal or vertically?
-#
-# == details
-# Normally we directly use ``+`` for horizontal concatenation and `\%v\%` for vertical concatenation.
-#
-# == value
-# A `HeatmapList-class` object.
-#
-# == author
-# Zuguang Gu <z.gu@dkfz.de>
-#
-setMethod(
-  f = "add_heatmap",
-  signature = "Heatmap",
-  definition = function(object, x, direction = c("horizontal", "vertical")) {
-    direction <- match.arg(direction)[1]
-
-    ht_list <- new("HeatmapList")
-    ht_list@direction <- direction
-
-    ht_list <- add_heatmap(ht_list, object, direction = direction)
-    ht_list <- add_heatmap(ht_list, x, direction = direction)
-    return(ht_list)
-  }
-)
-
-# == title
-# Widths of Heatmap Components
-#
-# == param
-# -object A `Heatmap-class` object.
-# -k Which components in the heatmap. The value should numeric indices or the names
-#    of the corresponding row component. See **Detials**.
-#
-# == details
-# All row components are: ``row_title_left``, ``row_dend_left``, ``row_names_left``, ``row_anno_left``,
-# ``heatmap_body``, ``row_anno_right``, ``row_names_right``, ``row_dend_right``, ``row_title_right``.
-#
-# This function is only for internal use.
-#
-# == value
-# A `grid::unit` object.
-#
-# == author
-# Zuguang Gu <z.gu@dkfz.de>
-#
 setMethod(
   f = "component_width",
   signature = "Heatmap",
@@ -608,27 +530,6 @@ setMethod(
   }
 )
 
-# == title
-# Heights of Heatmap Components
-#
-# == param
-# -object A `Heatmap-class` object.
-# -k Which components in the heatmap. The value should numeric indices or the names
-#    of the corresponding column component. See **Detials**.
-#
-# == detail
-# All column components are: ``column_title_top``, ``column_dend_top``, ``column_names_top``,
-# ``column_anno_top``, ``heatmap_body``, ``column_anno_bottom``, ``column_names_bottom``,
-# ``column_dend_bottom``, ``column_title_bottom``.
-#
-# This function is only for internal use.
-#
-# == value
-# A `grid::unit` object.
-#
-# == author
-# Zuguang Gu <z.gu@dkfz.de>
-#
 setMethod(
   f = "component_height",
   signature = "Heatmap",
@@ -671,37 +572,25 @@ names(HEATMAP_LAYOUT_ROW_COMPONENT) <- c(
 
 heatmap_layout_index <- function(nm) {
   if (grepl("column", nm)) {
-    ind <- c(HEATMAP_LAYOUT_COLUMN_COMPONENT[nm], HEATMAP_LAYOUT_ROW_COMPONENT["heatmap_body"])
+    ind <- c(
+      HEATMAP_LAYOUT_COLUMN_COMPONENT[nm],
+      HEATMAP_LAYOUT_ROW_COMPONENT["heatmap_body"]
+    )
   } else if (grepl("row", nm)) {
-    ind <- c(HEATMAP_LAYOUT_COLUMN_COMPONENT["heatmap_body"], HEATMAP_LAYOUT_ROW_COMPONENT[nm])
+    ind <- c(
+      HEATMAP_LAYOUT_COLUMN_COMPONENT["heatmap_body"],
+      HEATMAP_LAYOUT_ROW_COMPONENT[nm]
+    )
   } else if (nm == "heatmap_body") { # heatmap_body
-    ind <- c(HEATMAP_LAYOUT_COLUMN_COMPONENT["heatmap_body"], HEATMAP_LAYOUT_ROW_COMPONENT["heatmap_body"])
+    ind <- c(
+      HEATMAP_LAYOUT_COLUMN_COMPONENT["heatmap_body"],
+      HEATMAP_LAYOUT_ROW_COMPONENT["heatmap_body"]
+    )
   }
   names(ind) <- c("layout.pos.row", "layout.pos.col")
   return(ind)
 }
 
-# == title
-# Set Width of Heatmap Component
-#
-# == param
-# -object A `Heatmap-class` object.
-# -k Which row component? The value should a numeric index or the name
-#    of the corresponding row component. See **Detials**.
-# -v width of the component, a `grid::unit` object.
-#
-# == detail
-# All row components are: ``row_title_left``, ``row_dend_left``, ``row_names_left``, ``row_anno_left``,
-# ``heatmap_body``, ``row_anno_right``, ``row_names_right``, ``row_dend_right``, ``row_title_right``.
-#
-# This function is only for internal use.
-#
-# == value
-# The `Heatmap-class` object.
-#
-# == author
-# Zuguang Gu <z.gu@dkfz.de>
-#
 setMethod(
   f = "set_component_width",
   signature = "Heatmap",
@@ -722,28 +611,6 @@ setMethod(
   }
 )
 
-# == title
-# Set Height of Heatmap Component
-#
-# == param
-# -object A `Heatmap-class` object.
-# -k Which column component? The value should a numeric index or the name
-#    of the corresponding column component. See **Detials**.
-# -v Height of the component, a `grid::unit` object.
-#
-# == detail
-# All column components are: ``column_title_top``, ``column_dend_top``, ``column_names_top``,
-# ``column_anno_top``, ``heatmap_body``, ``column_anno_bottom``, ``column_names_bottom``,
-# ``column_dend_bottom``, ``column_title_bottom``.
-#
-# This function is only for internal use.
-#
-# == value
-# The `Heatmap-class` object.
-#
-# == author
-# Zuguang Gu <z.gu@dkfz.de>
-#
 setMethod(
   f = "set_component_height",
   signature = "Heatmap",

@@ -1,297 +1,316 @@
-# == title
-# Draw Heatmap Body
-#
-# == param
-# -object A `Heatmap-class` object.
-# -kr Row slice index.
-# -kc Column slice index.
-# -... Pass to `grid::viewport` which includes the slice of heatmap body.
-#
-# == details
-# A viewport is created which contains subset rows and columns of the heatmap.
-#
-# This function is only for internal use.
-#
-# == value
-# This function returns no value.
-#
-# == author
-# Zuguang Gu <z.gu@dkfz.de>
-#
-setMethod(
-  f = "draw_heatmap_body",
-  signature = "Heatmap",
-  definition = function(object, kr = 1, kc = 1, ...) {
-    if (ncol(object@matrix) == 0 || nrow(object@matrix) == 0) {
-      return(invisible(NULL))
-    }
-
-    row_order <- object@row_order_list[[kr]]
-    column_order <- object@column_order_list[[kc]]
-
-    gp <- object@matrix_param$gp
-    border <- object@matrix_param$border
-
-    use_raster <- object@heatmap_param$use_raster
-    raster_device <- object@heatmap_param$raster_device
-    raster_quality <- object@heatmap_param$raster_quality
-    raster_device_param <- object@heatmap_param$raster_device_param
-    raster_by_magick <- object@heatmap_param$raster_by_magick
-    raster_magick_filter <- object@heatmap_param$raster_magick_filter
-    if (length(raster_device_param) == 0) raster_device_param <- list()
-
-    pushViewport(viewport(name = paste(object@name, "heatmap_body", kr, kc, sep = "_"), ...))
-
-    mat <- object@matrix[row_order, column_order, drop = FALSE]
-    oe <- try(col_matrix <- map_to_colors(object@matrix_color_mapping, mat), silent = TRUE)
-    if (inherits(oe, "try-error")) {
-      col_matrix <- matrix(NA, nrow = nrow(mat), ncol = ncol(mat))
-    }
-
-    nc <- ncol(mat)
-    nr <- nrow(mat)
-    x <- (seq_len(nc) - 0.5) / nc
-    y <- (rev(seq_len(nr)) - 0.5) / nr
-    expand_index <- expand.grid(seq_len(nr), seq_len(nc))
-
-    cell_fun <- object@matrix_param$cell_fun
-    layer_fun <- object@matrix_param$layer_fun
-    if (!is.null(cell_fun)) {
-      use_raster <- FALSE
-    }
-    if (identical(object@matrix_param$gp$type, "none")) {
-      use_raster <- FALSE
-    }
-
-    if (use_raster) {
-      # write the image into a temporary file and read it back
-      device_info <- switch(raster_device,
-        png = c("grDevices", "png", "readPNG"),
-        jpeg = c("grDevices", "jpeg", "readJPEG"),
-        tiff = c("grDevices", "tiff", "readTIFF"),
-        CairoPNG = c("Cairo", "png", "readPNG"),
-        CairoJPEG = c("Cairo", "jpeg", "readJPEG"),
-        CairoTIFF = c("Cairo", "tiff", "readTIFF"),
-        agg_png = c("ragg", "png", "readPNG")
-      )
-      if (!requireNamespace(device_info[1])) {
-        stop_wrap(paste0("Need ", device_info[1], " package to write image."))
-      }
-      if (!requireNamespace(device_info[2])) {
-        stop_wrap(paste0("Need ", device_info[2], " package to read image."))
-      }
-
-      if (raster_device %in% c("png", "jpeg", "tiff")) {
-        if (!"type" %in% names(raster_device_param)) {
-          if (capabilities("cairo")) {
-            raster_device_param$type <- "cairo"
-          }
-        }
-      }
-
-      # can we get the size of the heatmap body?
-      heatmap_width_pt <- max(1, ceiling(convertWidth(unit(1, "npc"), "bigpts", valueOnly = TRUE)))
-      heatmap_height_pt <- max(1, ceiling(convertHeight(unit(1, "npc"), "bigpts", valueOnly = TRUE)))
-
-      if (raster_quality < 1) raster_quality <- 1
-      heatmap_width_pt <- ceiling(heatmap_width_pt * raster_quality)
-      heatmap_height_pt <- ceiling(heatmap_height_pt * raster_quality)
-
-      matrix_is_resized <- FALSE
-      # resize on the matrix
-      raster_resize_mat <- object@heatmap_param$raster_resize_mat
-      if (!identical(raster_resize_mat, FALSE)) {
-        if (is.logical(raster_resize_mat)) {
-          raster_resize_mat_fun <- function(x) mean(x, na.rm = TRUE)
-        } else {
-          if (!inherits(raster_resize_mat, "function")) {
-            stop_wrap("`raster_resize_mat` should be set as logical scalar or a function.")
-          }
-          raster_resize_mat_fun <- raster_resize_mat
-        }
-
-        if (heatmap_width_pt < nc && heatmap_height_pt < nr) {
-          mat2 <- resize_matrix(mat, nr = heatmap_height_pt, nc = heatmap_width_pt, fun = raster_resize_mat_fun)
-          matrix_is_resized <- TRUE
-        } else if (heatmap_width_pt < nc) {
-          mat2 <- resize_matrix(mat, nr = nr, nc = heatmap_width_pt, fun = raster_resize_mat_fun)
-          matrix_is_resized <- TRUE
-        } else if (heatmap_height_pt < nr) {
-          mat2 <- resize_matrix(mat, nr = heatmap_height_pt, nc = nc, fun = raster_resize_mat_fun)
-          matrix_is_resized <- TRUE
-        }
-      }
-
-      if (matrix_is_resized) {
-        raster_by_magick <- FALSE
-      }
-
-      temp_dir <- tempdir()
-      temp_image <- tempfile(pattern = paste0(".heatmap_body_", digest::digest(object@name), "_", kr, "_", kc), tmpdir = temp_dir, fileext = paste0(".", device_info[2]))
-      device_fun <- getFromNamespace(raster_device, ns = device_info[1])
-
-      if (raster_by_magick) {
-        temp_image_width <- ceiling(max(heatmap_width_pt, nc, 1))
-        temp_image_height <- ceiling(max(heatmap_height_pt, nr, 1))
-      } else if (matrix_is_resized) {
-        temp_image_width <- ceiling(max(heatmap_width_pt, 1))
-        temp_image_height <- ceiling(max(heatmap_height_pt, 1))
-      } else {
-        temp_image_width <- ceiling(max(heatmap_width_pt, 1))
-        temp_image_height <- ceiling(max(heatmap_height_pt, 1))
-      }
-      temp_image_width <- as.integer(temp_image_width)
-      temp_image_height <- as.integer(temp_image_height)
-
-      if (!is.na(ht_opt$raster_temp_image_max_width)) {
-        temp_image_width <- min(temp_image_width, ht_opt$raster_temp_image_max_width)
-      }
-      if (!is.na(ht_opt$raster_temp_image_max_height)) {
-        temp_image_height <- min(temp_image_height, ht_opt$raster_temp_image_max_height)
-      }
-
-      oe <- try(do.call(device_fun, c(list(
-        filename = temp_image,
-        width = temp_image_width, height = temp_image_height
-      ), raster_device_param)))
-      if (inherits(oe, "try-error")) {
-        stop_wrap(qq("The size of the temporary image for rasterization is too huge (@{temp_image_width} x @{temp_image_height} px) that it is cannot be handled by the device function `@{device_info[1]}:@{raster_device}()`. Please reduce the maximal size of temporary image by setting proper values for `ht_opt$raster_temp_image_max_width` and `ht_opt$raster_temp_image_max_height`."))
-      }
-
-      if (object@heatmap_param$verbose) {
-        qqcat("saving into a temp image (.@{device_info[2]}) with size @{temp_image_width}x@{temp_image_height}px.\n")
-      }
-      if (matrix_is_resized) {
-        if (object@heatmap_param$verbose) {
-          qqcat("resize the matrix from (@{nrow(mat)}x@{ncol(mat)}) to (@{nrow(mat2)}x@{ncol(mat2)}).\n")
-        }
-        col_matrix2 <- map_to_colors(object@matrix_color_mapping, mat2)
-        nc2 <- ncol(mat2)
-        nr2 <- nrow(mat2)
-        x2 <- (seq_len(nc2) - 0.5) / nc2
-        y2 <- (rev(seq_len(nr2)) - 0.5) / nr2
-        expand_index2 <- expand.grid(seq_len(nr2), seq_len(nc2))
-        grid.rect(x2[expand_index2[[2]]], y2[expand_index2[[1]]], width = unit(1 / nc2, "npc"), height = unit(1 / nr2, "npc"), gp = do.call("gpar", c(list(fill = col_matrix2), gp)))
-      } else {
-        grid.rect(x[expand_index[[2]]], y[expand_index[[1]]], width = unit(1 / nc, "npc"), height = unit(1 / nr, "npc"), gp = do.call("gpar", c(list(fill = col_matrix), gp)))
-      }
-      if (is.function(layer_fun)) {
-        if (length(as.list(formals(layer_fun))) == 7) {
-          layer_fun(
-            column_order[expand_index[[2]]], row_order[expand_index[[1]]],
-            unit(x[expand_index[[2]]], "npc"), unit(y[expand_index[[1]]], "npc"),
-            unit(rep(1 / nc, nrow(expand_index)), "npc"), unit(rep(1 / nr, nrow(expand_index)), "npc"),
-            as.vector(col_matrix)
-          )
-        } else {
-          layer_fun(
-            column_order[expand_index[[2]]], row_order[expand_index[[1]]],
-            unit(x[expand_index[[2]]], "npc"), unit(y[expand_index[[1]]], "npc"),
-            unit(rep(1 / nc, nrow(expand_index)), "npc"), unit(rep(1 / nr, nrow(expand_index)), "npc"),
-            as.vector(col_matrix), kr, kc
-          )
-        }
-      }
-      dev.off2()
-
-      if (object@heatmap_param$verbose) {
-        qqcat("resize the temp image to a size @{heatmap_width_pt}x@{heatmap_height_pt}px.\n")
-      }
-      if (raster_by_magick) {
-        if (object@heatmap_param$verbose) {
-          qqcat("image is read by magick.\n")
-        }
-        if (!requireNamespace("magick")) {
-          stop_wrap("'magick' package should be installed.")
-        }
-        image <- magick::image_read(temp_image)
-        image <- magick::image_resize(image, paste0(heatmap_width_pt, "x", heatmap_height_pt, "!"), filter = raster_magick_filter)
-        image <- as.raster(image)
-      } else {
-        if (object@heatmap_param$verbose) {
-          qqcat("image is read by @{device_info[2]}::@{device_info[3]}\n")
-        }
-        image <- getFromNamespace(device_info[3], ns = device_info[2])(temp_image)
-      }
-      # validate image, there might be white horizontal lines and vertical lines
-      # image = validate_raster_matrix(image, mat, object@matrix_color_mapping)
-
-      grid.raster(image, width = unit(1, "npc"), height = unit(1, "npc"), interpolate = FALSE)
-
-      ### only for testing the temp image size ###
-      if (ht_opt("__export_image_size__")) {
-        if (inherits(image, "magick-image")) {
-          image <- as.raster(image)
-        } else {
-          tf <- tempfile()
-          png(tf, width = heatmap_width_pt, height = heatmap_height_pt)
-          grid.raster(image, width = unit(1, "npc"), height = unit(1, "npc"))
-          dev.off()
-          image <- as.raster(png::readPNG(tf))
-          file.remove(tf)
-        }
-        attr(image, "width") <- heatmap_width_pt
-        attr(image, "height") <- heatmap_height_pt
-        # assign(".image", image, envir = .GlobalEnv)
-      }
-      ########################
-
-      file.remove(temp_image)
-    } else {
-      if (any(names(gp) %in% c("type"))) {
-        if (gp$type == "none") {
-        } else {
-          grid.rect(x[expand_index[[2]]], y[expand_index[[1]]], width = unit(1 / nc, "npc"), height = unit(1 / nr, "npc"), gp = do.call("gpar", c(list(fill = col_matrix), gp)))
-        }
-      } else {
-        grid.rect(x[expand_index[[2]]], y[expand_index[[1]]], width = unit(1 / nc, "npc"), height = unit(1 / nr, "npc"), gp = do.call("gpar", c(list(fill = col_matrix), gp)))
-      }
-
-      if (is.function(cell_fun)) {
-        for (i in seq_len(nr)) {
-          for (j in seq_len(nc)) {
-            cell_fun(
-              column_order[j], row_order[i], unit(x[j], "npc"), unit(y[i], "npc"),
-              unit(1 / nc, "npc"), unit(1 / nr, "npc"),
-              col_matrix[i, j]
-            )
-          }
-        }
-      }
-      if (is.function(layer_fun)) {
-        if (length(as.list(formals(layer_fun))) == 7) {
-          layer_fun(
-            column_order[expand_index[[2]]], row_order[expand_index[[1]]],
-            unit(x[expand_index[[2]]], "npc"), unit(y[expand_index[[1]]], "npc"),
-            unit(rep(1 / nc, nrow(expand_index)), "npc"), unit(rep(1 / nr, nrow(expand_index)), "npc"),
-            as.vector(col_matrix)
-          )
-        } else {
-          layer_fun(
-            column_order[expand_index[[2]]], row_order[expand_index[[1]]],
-            unit(x[expand_index[[2]]], "npc"), unit(y[expand_index[[1]]], "npc"),
-            unit(rep(1 / nc, nrow(expand_index)), "npc"), unit(rep(1 / nr, nrow(expand_index)), "npc"),
-            as.vector(col_matrix), kr, kc
-          )
-        }
-      }
-    }
-
-    if (!(identical(border, FALSE) || identical(border, NA))) {
-      border_gp <- object@matrix_param$border_gp
-      if (!identical(border, TRUE)) {
-        border_gp$col <- border
-      }
-      if ("fill" %in% names(border_gp)) {
-        message_wrap("`fill` is ignored in `border_gp`. The value for `fill` is always 'transparent'.")
-      }
-      border_gp$fill <- "transparent"
-      grid.rect(gp = border_gp)
-    }
-
-    upViewport()
+#' @export
+#' @method draw Heatmap
+#' @rdname Heatmap
+methods::setMethod(
+  f = "draw", signature = "Heatmap",
+  function(object, ...) {
+    ht_list <- new("HeatmapList")
+    ht_list <- add_heatmap(ht_list, object)
+    draw(ht_list, ...)
   }
 )
+
+draw_heatmap_internal <- function(object) {
+  if (nrow(object@layout$layout_index) == 0) {
+    return(invisible(NULL))
+  }
+  layout <- grid.layout(
+    nrow = length(HEATMAP_LAYOUT_COLUMN_COMPONENT),
+    ncol = length(HEATMAP_LAYOUT_ROW_COMPONENT), widths = component_width(object),
+    heights = component_height(object)
+  )
+  pushViewport(viewport(layout = layout))
+  ht_layout_index <- object@layout$layout_index
+  ht_graphic_fun_list <- object@layout$graphic_fun_list
+  for (j in seq_len(nrow(ht_layout_index))) {
+    if (HEATMAP_LAYOUT_COLUMN_COMPONENT["heatmap_body"] %in%
+      ht_layout_index[j, 1] &&
+      HEATMAP_LAYOUT_ROW_COMPONENT["heatmap_body"] %in% ht_layout_index[j, 2]) {
+      pushViewport(viewport(
+        layout.pos.row = ht_layout_index[j, 1],
+        layout.pos.col = ht_layout_index[j, 2],
+        name = paste(object@name, "heatmap_body_wrap", sep = "_")
+      ))
+    } else {
+      pushViewport(viewport(layout.pos.row = ht_layout_index[j, 1], layout.pos.col = ht_layout_index[j, 2]))
+    }
+    ht_graphic_fun_list[[j]](object)
+    upViewport()
+  }
+  upViewport()
+}
+
+draw_heatmap_body <- function(object, kr = 1, kc = 1, ...) {
+  if (ncol(object@matrix) == 0 || nrow(object@matrix) == 0) {
+    return(invisible(NULL))
+  }
+
+  row_order <- object@row_order_list[[kr]]
+  column_order <- object@column_order_list[[kc]]
+
+  gp <- object@matrix_param$gp
+  border <- object@matrix_param$border
+
+  use_raster <- object@heatmap_param$use_raster
+  raster_device <- object@heatmap_param$raster_device
+  raster_quality <- object@heatmap_param$raster_quality
+  raster_device_param <- object@heatmap_param$raster_device_param
+  raster_by_magick <- object@heatmap_param$raster_by_magick
+  raster_magick_filter <- object@heatmap_param$raster_magick_filter
+  if (length(raster_device_param) == 0) raster_device_param <- list()
+
+  pushViewport(viewport(name = paste(object@name, "heatmap_body", kr, kc, sep = "_"), ...))
+
+  mat <- object@matrix[row_order, column_order, drop = FALSE]
+  oe <- try(col_matrix <- map_to_colors(object@matrix_color_mapping, mat), silent = TRUE)
+  if (inherits(oe, "try-error")) {
+    col_matrix <- matrix(NA, nrow = nrow(mat), ncol = ncol(mat))
+  }
+
+  nc <- ncol(mat)
+  nr <- nrow(mat)
+  x <- (seq_len(nc) - 0.5) / nc
+  y <- (rev(seq_len(nr)) - 0.5) / nr
+  expand_index <- expand.grid(seq_len(nr), seq_len(nc))
+
+  cell_fun <- object@matrix_param$cell_fun
+  layer_fun <- object@matrix_param$layer_fun
+  if (!is.null(cell_fun)) {
+    use_raster <- FALSE
+  }
+  if (identical(object@matrix_param$gp$type, "none")) {
+    use_raster <- FALSE
+  }
+
+  if (use_raster) {
+    # write the image into a temporary file and read it back
+    device_info <- switch(raster_device,
+      png = c("grDevices", "png", "readPNG"),
+      jpeg = c("grDevices", "jpeg", "readJPEG"),
+      tiff = c("grDevices", "tiff", "readTIFF"),
+      CairoPNG = c("Cairo", "png", "readPNG"),
+      CairoJPEG = c("Cairo", "jpeg", "readJPEG"),
+      CairoTIFF = c("Cairo", "tiff", "readTIFF"),
+      agg_png = c("ragg", "png", "readPNG")
+    )
+    if (!requireNamespace(device_info[1])) {
+      stop_wrap(paste0("Need ", device_info[1], " package to write image."))
+    }
+    if (!requireNamespace(device_info[2])) {
+      stop_wrap(paste0("Need ", device_info[2], " package to read image."))
+    }
+
+    if (raster_device %in% c("png", "jpeg", "tiff")) {
+      if (!"type" %in% names(raster_device_param)) {
+        if (capabilities("cairo")) {
+          raster_device_param$type <- "cairo"
+        }
+      }
+    }
+
+    # can we get the size of the heatmap body?
+    heatmap_width_pt <- max(1, ceiling(convertWidth(unit(1, "npc"), "bigpts", valueOnly = TRUE)))
+    heatmap_height_pt <- max(1, ceiling(convertHeight(unit(1, "npc"), "bigpts", valueOnly = TRUE)))
+
+    if (raster_quality < 1) raster_quality <- 1
+    heatmap_width_pt <- ceiling(heatmap_width_pt * raster_quality)
+    heatmap_height_pt <- ceiling(heatmap_height_pt * raster_quality)
+
+    matrix_is_resized <- FALSE
+    # resize on the matrix
+    raster_resize_mat <- object@heatmap_param$raster_resize_mat
+    if (!identical(raster_resize_mat, FALSE)) {
+      if (is.logical(raster_resize_mat)) {
+        raster_resize_mat_fun <- function(x) mean(x, na.rm = TRUE)
+      } else {
+        if (!inherits(raster_resize_mat, "function")) {
+          stop_wrap("`raster_resize_mat` should be set as logical scalar or a function.")
+        }
+        raster_resize_mat_fun <- raster_resize_mat
+      }
+
+      if (heatmap_width_pt < nc && heatmap_height_pt < nr) {
+        mat2 <- resize_matrix(mat, nr = heatmap_height_pt, nc = heatmap_width_pt, fun = raster_resize_mat_fun)
+        matrix_is_resized <- TRUE
+      } else if (heatmap_width_pt < nc) {
+        mat2 <- resize_matrix(mat, nr = nr, nc = heatmap_width_pt, fun = raster_resize_mat_fun)
+        matrix_is_resized <- TRUE
+      } else if (heatmap_height_pt < nr) {
+        mat2 <- resize_matrix(mat, nr = heatmap_height_pt, nc = nc, fun = raster_resize_mat_fun)
+        matrix_is_resized <- TRUE
+      }
+    }
+
+    if (matrix_is_resized) {
+      raster_by_magick <- FALSE
+    }
+
+    temp_dir <- tempdir()
+    temp_image <- tempfile(pattern = paste0(".heatmap_body_", digest::digest(object@name), "_", kr, "_", kc), tmpdir = temp_dir, fileext = paste0(".", device_info[2]))
+    device_fun <- getFromNamespace(raster_device, ns = device_info[1])
+
+    if (raster_by_magick) {
+      temp_image_width <- ceiling(max(heatmap_width_pt, nc, 1))
+      temp_image_height <- ceiling(max(heatmap_height_pt, nr, 1))
+    } else if (matrix_is_resized) {
+      temp_image_width <- ceiling(max(heatmap_width_pt, 1))
+      temp_image_height <- ceiling(max(heatmap_height_pt, 1))
+    } else {
+      temp_image_width <- ceiling(max(heatmap_width_pt, 1))
+      temp_image_height <- ceiling(max(heatmap_height_pt, 1))
+    }
+    temp_image_width <- as.integer(temp_image_width)
+    temp_image_height <- as.integer(temp_image_height)
+
+    if (!is.na(ht_opt$raster_temp_image_max_width)) {
+      temp_image_width <- min(temp_image_width, ht_opt$raster_temp_image_max_width)
+    }
+    if (!is.na(ht_opt$raster_temp_image_max_height)) {
+      temp_image_height <- min(temp_image_height, ht_opt$raster_temp_image_max_height)
+    }
+
+    oe <- try(do.call(device_fun, c(list(
+      filename = temp_image,
+      width = temp_image_width, height = temp_image_height
+    ), raster_device_param)))
+    if (inherits(oe, "try-error")) {
+      stop_wrap(qq("The size of the temporary image for rasterization is too huge (@{temp_image_width} x @{temp_image_height} px) that it is cannot be handled by the device function `@{device_info[1]}:@{raster_device}()`. Please reduce the maximal size of temporary image by setting proper values for `ht_opt$raster_temp_image_max_width` and `ht_opt$raster_temp_image_max_height`."))
+    }
+
+    if (object@heatmap_param$verbose) {
+      qqcat("saving into a temp image (.@{device_info[2]}) with size @{temp_image_width}x@{temp_image_height}px.\n")
+    }
+    if (matrix_is_resized) {
+      if (object@heatmap_param$verbose) {
+        qqcat("resize the matrix from (@{nrow(mat)}x@{ncol(mat)}) to (@{nrow(mat2)}x@{ncol(mat2)}).\n")
+      }
+      col_matrix2 <- map_to_colors(object@matrix_color_mapping, mat2)
+      nc2 <- ncol(mat2)
+      nr2 <- nrow(mat2)
+      x2 <- (seq_len(nc2) - 0.5) / nc2
+      y2 <- (rev(seq_len(nr2)) - 0.5) / nr2
+      expand_index2 <- expand.grid(seq_len(nr2), seq_len(nc2))
+      grid.rect(x2[expand_index2[[2]]], y2[expand_index2[[1]]], width = unit(1 / nc2, "npc"), height = unit(1 / nr2, "npc"), gp = do.call("gpar", c(list(fill = col_matrix2), gp)))
+    } else {
+      grid.rect(x[expand_index[[2]]], y[expand_index[[1]]], width = unit(1 / nc, "npc"), height = unit(1 / nr, "npc"), gp = do.call("gpar", c(list(fill = col_matrix), gp)))
+    }
+    if (is.function(layer_fun)) {
+      if (length(as.list(formals(layer_fun))) == 7) {
+        layer_fun(
+          column_order[expand_index[[2]]], row_order[expand_index[[1]]],
+          unit(x[expand_index[[2]]], "npc"), unit(y[expand_index[[1]]], "npc"),
+          unit(rep(1 / nc, nrow(expand_index)), "npc"), unit(rep(1 / nr, nrow(expand_index)), "npc"),
+          as.vector(col_matrix)
+        )
+      } else {
+        layer_fun(
+          column_order[expand_index[[2]]], row_order[expand_index[[1]]],
+          unit(x[expand_index[[2]]], "npc"), unit(y[expand_index[[1]]], "npc"),
+          unit(rep(1 / nc, nrow(expand_index)), "npc"), unit(rep(1 / nr, nrow(expand_index)), "npc"),
+          as.vector(col_matrix), kr, kc
+        )
+      }
+    }
+    dev.off2()
+
+    if (object@heatmap_param$verbose) {
+      qqcat("resize the temp image to a size @{heatmap_width_pt}x@{heatmap_height_pt}px.\n")
+    }
+    if (raster_by_magick) {
+      if (object@heatmap_param$verbose) {
+        qqcat("image is read by magick.\n")
+      }
+      if (!requireNamespace("magick")) {
+        stop_wrap("'magick' package should be installed.")
+      }
+      image <- magick::image_read(temp_image)
+      image <- magick::image_resize(image, paste0(heatmap_width_pt, "x", heatmap_height_pt, "!"), filter = raster_magick_filter)
+      image <- as.raster(image)
+    } else {
+      if (object@heatmap_param$verbose) {
+        qqcat("image is read by @{device_info[2]}::@{device_info[3]}\n")
+      }
+      image <- getFromNamespace(device_info[3], ns = device_info[2])(temp_image)
+    }
+    # validate image, there might be white horizontal lines and vertical lines
+    # image = validate_raster_matrix(image, mat, object@matrix_color_mapping)
+
+    grid.raster(image, width = unit(1, "npc"), height = unit(1, "npc"), interpolate = FALSE)
+
+    ### only for testing the temp image size ###
+    if (ht_opt("__export_image_size__")) {
+      if (inherits(image, "magick-image")) {
+        image <- as.raster(image)
+      } else {
+        tf <- tempfile()
+        png(tf, width = heatmap_width_pt, height = heatmap_height_pt)
+        grid.raster(image, width = unit(1, "npc"), height = unit(1, "npc"))
+        dev.off()
+        image <- as.raster(png::readPNG(tf))
+        file.remove(tf)
+      }
+      attr(image, "width") <- heatmap_width_pt
+      attr(image, "height") <- heatmap_height_pt
+      # assign(".image", image, envir = .GlobalEnv)
+    }
+    ########################
+
+    file.remove(temp_image)
+  } else {
+    if (any(names(gp) %in% c("type"))) {
+      if (gp$type == "none") {
+      } else {
+        grid.rect(x[expand_index[[2]]], y[expand_index[[1]]], width = unit(1 / nc, "npc"), height = unit(1 / nr, "npc"), gp = do.call("gpar", c(list(fill = col_matrix), gp)))
+      }
+    } else {
+      grid.rect(x[expand_index[[2]]], y[expand_index[[1]]], width = unit(1 / nc, "npc"), height = unit(1 / nr, "npc"), gp = do.call("gpar", c(list(fill = col_matrix), gp)))
+    }
+
+    if (is.function(cell_fun)) {
+      for (i in seq_len(nr)) {
+        for (j in seq_len(nc)) {
+          cell_fun(
+            column_order[j], row_order[i], unit(x[j], "npc"), unit(y[i], "npc"),
+            unit(1 / nc, "npc"), unit(1 / nr, "npc"),
+            col_matrix[i, j]
+          )
+        }
+      }
+    }
+    if (is.function(layer_fun)) {
+      if (length(as.list(formals(layer_fun))) == 7) {
+        layer_fun(
+          column_order[expand_index[[2]]], row_order[expand_index[[1]]],
+          unit(x[expand_index[[2]]], "npc"), unit(y[expand_index[[1]]], "npc"),
+          unit(rep(1 / nc, nrow(expand_index)), "npc"), unit(rep(1 / nr, nrow(expand_index)), "npc"),
+          as.vector(col_matrix)
+        )
+      } else {
+        layer_fun(
+          column_order[expand_index[[2]]], row_order[expand_index[[1]]],
+          unit(x[expand_index[[2]]], "npc"), unit(y[expand_index[[1]]], "npc"),
+          unit(rep(1 / nc, nrow(expand_index)), "npc"), unit(rep(1 / nr, nrow(expand_index)), "npc"),
+          as.vector(col_matrix), kr, kc
+        )
+      }
+    }
+  }
+
+  if (!(identical(border, FALSE) || identical(border, NA))) {
+    border_gp <- object@matrix_param$border_gp
+    if (!identical(border, TRUE)) {
+      border_gp$col <- border
+    }
+    if ("fill" %in% names(border_gp)) {
+      message_wrap("`fill` is ignored in `border_gp`. The value for `fill` is always 'transparent'.")
+    }
+    border_gp$fill <- "transparent"
+    grid.rect(gp = border_gp)
+  }
+
+  upViewport()
+}
+
 
 # check white lines in the RGB matrix, and re-fill the color from mat with color_mapping
 # careful: row orders of rgb and mat are reversed
@@ -359,9 +378,8 @@ R_binary <- function() {
 setMethod(
   f = "draw_dend",
   signature = "Heatmap",
-  definition = function(
-      object,
-      which = c("row", "column"), k = 1, max_height = NULL, ...) {
+  definition = function(object,
+                        which = c("row", "column"), k = 1, max_height = NULL, ...) {
     which <- match.arg(which)[1]
 
     side <- switch(which,
@@ -451,9 +469,8 @@ setMethod(
 setMethod(
   f = "draw_dimnames",
   signature = "Heatmap",
-  definition = function(
-      object,
-      which = c("row", "column"), k = 1, ...) {
+  definition = function(object,
+                        which = c("row", "column"), k = 1, ...) {
     which <- match.arg(which)[1]
 
     anno <- switch(which,
@@ -516,9 +533,8 @@ setMethod(
 setMethod(
   f = "draw_title",
   signature = "Heatmap",
-  definition = function(
-      object,
-      which = c("row", "column"), k = 1, ...) {
+  definition = function(object,
+                        which = c("row", "column"), k = 1, ...) {
     which <- match.arg(which)[1]
 
     side <- switch(which,

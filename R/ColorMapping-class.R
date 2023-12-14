@@ -22,13 +22,19 @@
 #
 
 
+
+
+
+
+
+
 #' Constructor Method for ColorMapping Class
-#'
+#' 
 #' Constructor Method for ColorMapping Class
-#'
+#' 
 #' \code{colors} and \code{levels} are used for discrete color mapping,
 #' \code{col_fun} and \code{breaks} are used for continuous color mapping.
-#'
+#' 
 #' @param name Name for this color mapping. The name is automatically generated
 #' if it is not specified.
 #' @param colors Discrete colors.
@@ -41,15 +47,17 @@
 #' @param na_col Colors for \code{NA} values.
 #' @param full_col A super set of \code{colors}, used internally.
 #' @return A \code{\link{ColorMapping-class}} object.
-#' @author Zuguang Gu <z.gu@@dkfz.de>
+#' @author Zuguang Gu \href{mailto:z.gu@@dkfz.dez.gu@@dkfz.de}
 #' @examples
-#'
-#' cm <- ColorMapping(colors = c("A" = "red", "B" = "black"))
+#' 
+#' 
+#' cm = ColorMapping(colors = c("A" = "red", "B" = "black"))
 #' cm
 #' require(circlize)
-#' col_fun <- colorRamp2(c(0, 1), c("white", "red"))
-#' cm <- ColorMapping(col_fun = col_fun)
-#'
+#' col_fun = colorRamp2(c(0, 1), c("white", "red"))
+#' cm = ColorMapping(col_fun = col_fun)
+#' 
+#' 
 ColorMapping <- setClass("ColorMapping",
   slots = list(
     colors = "character", # a list of colors
@@ -433,20 +441,28 @@ setMethod(
 # c(cm1, cm2)
 
 
+
+
+
+
+
+
 #' Concatenate A List of ColorMapping objects
-#'
+#' 
 #' Concatenate A List of ColorMapping objects
-#'
+#' 
 #' Only discrete color mappings can be concatenated.
-#'
+#' 
 #' @param ... A list of \code{\link{ColorMapping-class}} objects.
 #' @param name Name of the new merged color mapping.
 #' @examples
-#'
-#' cm1 <- ColorMapping(colors = c("A" = "red", "B" = "black"))
-#' cm2 <- ColorMapping(colors = c("B" = "blue", "C" = "green"))
+#' 
+#' 
+#' cm1 = ColorMapping(colors = c("A" = "red", "B" = "black"))
+#' cm2 = ColorMapping(colors = c("B" = "blue", "C" = "green"))
 #' c(cm1, cm2)
-#'
+#' 
+#' 
 c.ColorMapping <- function(..., name = NULL) {
   cm_list <- list(...)
   if (!all(sapply(cm_list, function(x) x@type) == "discrete")) {

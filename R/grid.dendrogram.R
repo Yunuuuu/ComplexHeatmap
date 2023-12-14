@@ -32,27 +32,35 @@ subset_dendrogram <- function(x, ind) {
 # str(dend)
 
 
+
+
+
+
+
+
 #' Adjust the Positions of nodes/leaves in the Dendrogram
-#'
+#' 
 #' Adjust the Positions of nodes/leaves in the Dendrogram
-#'
+#' 
 #' The positions of nodes stored as \code{x} attribute are recalculated based
 #' on the new positions of leaves.
-#'
+#' 
 #' By default, the position of leaves are at 0.5, 1.5, ..., n-0.5.
-#'
+#' 
 #' @param dend A \code{\link{dendrogram}} object.
 #' @param leaf_pos A vector of positions of leaves. The value can also be a
 #' \code{\link[grid]{unit}} object.
 #' @examples
-#'
-#' m <- matrix(rnorm(100), 10)
-#' dend <- as.dendrogram(hclust(dist(m)))
-#' dend <- adjust_dend_by_x(dend, sort(runif(10)))
+#' 
+#' 
+#' m = matrix(rnorm(100), 10)
+#' dend = as.dendrogram(hclust(dist(m)))
+#' dend = adjust_dend_by_x(dend, sort(runif(10)))
 #' str(dend)
-#' dend <- adjust_dend_by_x(dend, unit(1:10, "cm"))
+#' dend = adjust_dend_by_x(dend, unit(1:10, "cm"))
 #' str(dend)
-#'
+#' 
+#' 
 adjust_dend_by_x <- function(dend, leaf_pos = 1:nobs(dend) - 0.5) {
   n <- nobs(dend)
 
@@ -331,14 +339,20 @@ construct_dend_segments <- function(dend, gp) {
 #
 
 
+
+
+
+
+
+
 #' Grob for Dendrogram
-#'
+#' 
 #' Grob for Dendrogram
-#'
+#' 
 #' If \code{dend} has not been processed by \code{\link{adjust_dend_by_x}},
 #' internally \code{\link{adjust_dend_by_x}} is called to add \code{x}
 #' attributes to each node/leaf.
-#'
+#' 
 #' @param dend A \code{\link{dendrogram}} object.
 #' @param facing Facing of the dendrogram.
 #' @param order If it is set to \code{reverse}, the first leaf is put on the
@@ -352,10 +366,13 @@ construct_dend_segments <- function(dend, gp) {
 #' @return A \code{\link{grob}} object which is contructed by
 #' \code{\link[grid:grid.segments]{segmentsGrob}}.
 #' @examples
-#'
+#' 
+#' 
 #' # There is no example
 #' NULL
-#'
+#' 
+#' 
+#' 
 dendrogramGrob <- function(
     dend, facing = c("bottom", "top", "left", "right"),
     order = c("normal", "reverse"), gp = gpar()) {
@@ -674,18 +691,27 @@ dend_branches_heights <- function(d, v = NULL) {
 #
 
 
+
+
+
+
+
+
 #' Height of the Dendrograms
-#'
+#' 
 #' Height of the Dendrograms
-#'
-#'
+#' 
+#' 
 #' @param x a \code{\link{dendrogram}} object or a list of
 #' \code{\link{dendrogram}} objects.
 #' @examples
-#'
+#' 
+#' 
 #' # There is no example
 #' NULL
-#'
+#' 
+#' 
+#' 
 dend_heights <- function(x) {
   if (is.null(x)) {
     return(0)
@@ -722,28 +748,36 @@ dend_heights <- function(x) {
 # dend_xy(dend1)
 
 
+
+
+
+
+
+
 #' Coordinates of the Dendrogram
-#'
+#' 
 #' Coordinates of the Dendrogram
-#'
+#' 
 #' \code{dend} will be processed by \code{\link{adjust_dend_by_x}} if it is
 #' processed yet.
-#'
+#' 
 #' @param dend a \code{\link{dendrogram}} object.
 #' @return A list of leave positions (\code{x}) and dendrogram height
 #' (\code{y}).
 #' @examples
-#'
-#' m <- matrix(rnorm(100), 10)
-#' dend1 <- as.dendrogram(hclust(dist(m)))
+#' 
+#' 
+#' m = matrix(rnorm(100), 10)
+#' dend1 = as.dendrogram(hclust(dist(m)))
 #' dend_xy(dend1)
-#'
-#' dend1 <- adjust_dend_by_x(dend1, sort(runif(10)))
+#' 
+#' dend1 = adjust_dend_by_x(dend1, sort(runif(10)))
 #' dend_xy(dend1)
-#'
-#' dend1 <- adjust_dend_by_x(dend1, unit(1:10, "cm"))
+#' 
+#' dend1 = adjust_dend_by_x(dend1, unit(1:10, "cm"))
 #' dend_xy(dend1)
-#'
+#' 
+#' 
 dend_xy <- function(dend) {
   if (is.null(attr(dend, "x"))) {
     dend <- adjust_dend_by_x(dend)
@@ -795,30 +829,38 @@ dend_xy <- function(dend) {
 # grid.dendrogram(dend, test = TRUE)
 
 
+
+
+
+
+
+
 #' Cluster within and between Groups
-#'
+#' 
 #' Cluster within and between Groups
-#'
+#' 
 #' The clustering is firstly applied in each group, then clustering is applied
 #' to group means. The within-group dendrograms and between-group dendrogram
 #' are finally connected by \code{\link{merge_dendrogram}}.
-#'
+#' 
 #' In the final dendrogram, the within group dendrograms are enforced to be
 #' flat lines to emphasize that the within group dendrograms have no sense to
 #' compare to between-group dendrogram.
-#'
+#' 
 #' @param mat A matrix where clustering is applied on columns.
 #' @param factor A categorical vector.
 #' @return A \code{\link{dendrogram}} object. The order of columns can be
 #' retrieved by \code{\link[stats]{order.dendrogram}}.
 #' @examples
-#'
-#' m <- matrix(rnorm(120), nc = 12)
-#' colnames(m) <- letters[1:12]
-#' fa <- rep(c("a", "b", "c"), times = c(2, 4, 6))
-#' dend <- cluster_within_group(m, fa)
+#' 
+#' 
+#' m = matrix(rnorm(120), nc = 12)
+#' colnames(m) = letters[1:12]
+#' fa = rep(c("a", "b", "c"), times = c(2, 4, 6))
+#' dend = cluster_within_group(m, fa)
 #' grid.dendrogram(dend, test = TRUE)
-#'
+#' 
+#' 
 cluster_within_group <- function(mat, factor) {
   if (!is.factor(factor)) {
     factor <- factor(factor, levels = unique(factor))
@@ -878,24 +920,32 @@ cluster_within_group <- function(mat, factor) {
 # grid.dendrogram(dend, test = TRUE)
 
 
+
+
+
+
+
+
 #' Cluster only between Groups
-#'
+#' 
 #' Cluster only between Groups
-#'
+#' 
 #' The clustering is only applied between groups and inside a group, the order
 #' is unchanged.
-#'
+#' 
 #' @param mat A matrix where clustering is applied on columns.
 #' @param factor A categorical vector.
 #' @return A \code{\link{dendrogram}} object.
 #' @examples
-#'
-#' m <- matrix(rnorm(120), nc = 12)
-#' colnames(m) <- letters[1:12]
-#' fa <- rep(c("a", "b", "c"), times = c(2, 4, 6))
-#' dend <- cluster_between_groups(m, fa)
+#' 
+#' 
+#' m = matrix(rnorm(120), nc = 12)
+#' colnames(m) = letters[1:12]
+#' fa = rep(c("a", "b", "c"), times = c(2, 4, 6))
+#' dend = cluster_between_groups(m, fa)
 #' grid.dendrogram(dend, test = TRUE)
-#'
+#' 
+#' 
 cluster_between_groups <- function(mat, factor) {
   if (!is.factor(factor)) {
     factor <- factor(factor, levels = unique(factor))

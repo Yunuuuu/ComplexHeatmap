@@ -18,11 +18,17 @@
 #
 
 
+
+
+
+
+
+
 #' Draw 3D bars
-#'
+#' 
 #' Draw 3D bars
-#'
-#'
+#' 
+#' 
 #' @param x x coordinate of the center point in the bottom face.
 #' @param y y coordinate of the center point in the bottom face.
 #' @param w Width of the botton face.
@@ -33,10 +39,12 @@
 #' @param fill Filled colors for the bars.
 #' @param col Border colors.
 #' @examples
-#'
+#' 
+#' 
 #' grid.newpage()
 #' bar3D(c(0.3, 0.7), 0.5, 0.2, 0.2, 0.2, fill = 2:3)
-#'
+#' 
+#' 
 bar3D <- function(x, y, w, h, l, theta = 60, default.units = "npc", fill = "white", col = "black") {
   if (!is.unit(x)) x <- unit(x, default.units)
   if (!is.unit(y)) y <- unit(y, default.units)

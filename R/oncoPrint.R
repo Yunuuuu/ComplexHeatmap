@@ -640,13 +640,19 @@ oncoPrint <- function(mat, name,
 #
 
 
+
+
+
+
+
+
 #' Automatically generate alter_fun
-#'
+#' 
 #' Automatically generate alter_fun
-#'
+#' 
 #' This function aims to simplify the definition of functions in
 #' \code{alter_fun}. Now it only supports rectangles and points.
-#'
+#' 
 #' @param graphic Graphic to draw.
 #' @param width Relative width of the rectangle.
 #' @param height Relative height of the rectangle.
@@ -659,23 +665,23 @@ oncoPrint <- function(mat, name,
 #' @param pch Pch for points
 #' @param ... Pass to \code{\link[grid]{gpar}}
 #' @examples
-#'
-#' mat <- read.table(textConnection(
-#'   "s1,s2,s3
+#' 
+#' 
+#' mat = read.table(textConnection(
+#' "s1,s2,s3
 #' g1,snv;indel,snv,indel
 #' g2,,snv;indel,snv
-#' g3,snv,,indel;snv"
-#' ), row.names = 1, header = TRUE, sep = ",", stringsAsFactors = FALSE)
-#' mat <- as.matrix(mat)
-#' col <- c(snv = "red", indel = "blue")
-#'
-#' oncoPrint(mat,
-#'   alter_fun = list(
-#'     snv = alter_graphic("rect", width = 0.9, height = 0.9, fill = col["snv"]),
-#'     indel = alter_graphic("rect", width = 0.9, height = 0.9, fill = col["indel"])
-#'   ), col = col
-#' )
-#'
+#' g3,snv,,indel;snv"), row.names = 1, header = TRUE, sep = ",", stringsAsFactors = FALSE)
+#' mat = as.matrix(mat)
+#' col = c(snv = "red", indel = "blue")
+#' 
+#' oncoPrint(mat, 
+#' 	alter_fun = list(
+#' 		snv = alter_graphic("rect", width = 0.9, height = 0.9, fill = col["snv"]),
+#' 		indel = alter_graphic("rect", width = 0.9, height = 0.9, fill = col["indel"])
+#' 	), col = col)
+#' 
+#' 
 alter_graphic <- function(graphic = c("rect", "point"),
                           width = 1, height = 1,
                           horiz_margin = unit(1, "pt"), vertical_margin = unit(1, "pt"),
@@ -773,12 +779,18 @@ unify_mat_list <- function(mat_list, default = 0) {
 #
 
 
+
+
+
+
+
+
 #' Barplot Annotation for oncoPrint
-#'
+#' 
 #' Barplot Annotation for oncoPrint
-#'
+#' 
 #' This annotation function should always be used with \code{\link{oncoPrint}}.
-#'
+#' 
 #' @param type A vector of the alteration types in the data. It can be a subset
 #' of all alteration types if you don't want to show them all.
 #' @param which Is it a row annotation or a column annotation?
@@ -791,12 +803,15 @@ unify_mat_list <- function(mat_list, default = 0) {
 #' @param width Width of the annotation.
 #' @param height Height of the annotation.
 #' @param border Whether draw the border?
-#' @author Zuguang Gu <z.gu@@dkfz.de>
+#' @author Zuguang Gu \href{mailto:z.gu@@dkfz.dez.gu@@dkfz.de}
 #' @examples
-#'
+#' 
+#' 
 #' # There is no example
 #' NULL
-#'
+#' 
+#' 
+#' 
 anno_oncoprint_barplot <- function(type = NULL, which = c("column", "row"),
                                    bar_width = 0.6, beside = FALSE, ylim = NULL, show_fraction = FALSE, axis = TRUE,
                                    axis_param = if (which == "column") default_axis_param("column") else list(side = "top", labels_rot = 0),
@@ -948,18 +963,27 @@ guess_alter_fun_is_vectorized <- function(alter_fun) {
 #
 
 
+
+
+
+
+
+
 #' Default get_type for oncoPrint()
-#'
+#' 
 #' Default get_type for oncoPrint()
-#'
+#' 
 #' It recognizes following separators: \code{;:,|}.
-#'
+#' 
 #' @param x A strings which encode multiple altertations.
 #' @examples
-#'
+#' 
+#' 
 #' # There is no example
 #' NULL
-#'
+#' 
+#' 
+#' 
 default_get_type <- function(x) {
   x <- strsplit(x, "\\s*[;:,|]\\s*")[[1]]
   # x[!x %in% c("na", "NA")]

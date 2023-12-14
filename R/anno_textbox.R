@@ -283,11 +283,17 @@ grid.textbox <- function(text, x = unit(0.5, "npc"), y = unit(0.5, "npc"), gp = 
 # )
 
 
+
+
+
+
+
+
 #' Text box annotations
-#'
+#' 
 #' Text box annotations
-#'
-#'
+#' 
+#' 
 #' @param align_to It controls how the text boxes are aligned to the heatmap
 #' rows. The value can be a categorical vector which have the same length as
 #' heatmap rows, or a list of row indices. It does not necessarily include all
@@ -304,21 +310,22 @@ grid.textbox <- function(text, x = unit(0.5, "npc"), y = unit(0.5, "npc"), gp = 
 #' @param side Side of the annotation to the heatmap.
 #' @param ... Pass to \code{\link{textbox_grob}}.
 #' @examples
-#'
+#' 
+#' 
 #' require(circlize)
-#' mat <- matrix(rnorm(100 * 10), nrow = 100)
-#'
-#' split <- sample(letters[1:10], 100, replace = TRUE)
-#' text <- lapply(unique(split), function(x) {
-#'   data.frame(month.name, col = rand_color(12, friendly = TRUE), fontsize = runif(12, 6, 14))
+#' mat = matrix(rnorm(100*10), nrow = 100)
+#' 
+#' split = sample(letters[1:10], 100, replace = TRUE)
+#' text = lapply(unique(split), function(x) {
+#' 	data.frame(month.name, col = rand_color(12, friendly = TRUE), fontsize = runif(12, 6, 14))
 #' })
-#' names(text) <- unique(split)
-#'
-#' Heatmap(mat,
-#'   cluster_rows = FALSE, row_split = split,
-#'   right_annotation = rowAnnotation(wc = anno_textbox(split, text))
+#' names(text) = unique(split)
+#' 
+#' Heatmap(mat, cluster_rows = FALSE, row_split = split,
+#'     right_annotation = rowAnnotation(wc = anno_textbox(split, text))
 #' )
-#'
+#' 
+#' 
 anno_textbox <- function(align_to, text, background_gp = gpar(fill = "#DDDDDD", col = "#AAAAAA"),
                          which = c("row", "column"), by = "anno_link", side = c("right", "left"), ...) {
   if (is.null(background_gp$fill)) background_gp$fill <- "#DDDDDD"

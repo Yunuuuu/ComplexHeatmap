@@ -22,3 +22,46 @@ Description: Complex heatmaps are efficient to visualize associations
 biocViews: Software, Visualization, Sequencing
 URL: https://github.com/jokergoo/ComplexHeatmap, https://jokergoo.github.io/ComplexHeatmap-reference/book/
 License: MIT + file LICENSE
+Encoding: UTF-8
+ByteCompile: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
+Collate: 
+    '00_S4_generic_methods.R'
+    '00_size.R'
+    '3d.R'
+    'AdditiveUnit-class.R'
+    'AnnotationFunction-class.R'
+    'AnnotationFunction-function.R'
+    'ColorMapping-class.R'
+    'Heatmap-class.R'
+    'Heatmap-draw_component.R'
+    'Heatmap-layout.R'
+    'Heatmap-utils.R'
+    'HeatmapAnnotation-class.R'
+    'HeatmapList-class.R'
+    'HeatmapList-draw_component.R'
+    'HeatmapList-get_order.R'
+    'HeatmapList-layout.R'
+    'HeatmapList-legends.R'
+    'SingleAnnotation-class.R'
+    'Upset.R'
+    'anno_textbox.R'
+    'annotation_axis.R'
+    'box_align.R'
+    'decorate.R'
+    'densityHeatmap.R'
+    'genomic.R'
+    'global.R'
+    'grid.Legend.R'
+    'grid.dendrogram.R'
+    'gridtext.R'
+    'is_abs_unit.R'
+    'oncoPrint.R'
+    'other_translation.R'
+    'overview.R'
+    'pheatmap_translate.R'
+    'stacked_plot.R'
+    'temp.R'
+    'utils.R'
+    'zzz.R'

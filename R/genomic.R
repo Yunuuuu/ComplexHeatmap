@@ -14,11 +14,17 @@ GHEATMAP_ENV <- new.env()
 #
 
 
+
+
+
+
+
+
 #' Bin the genome
-#'
+#' 
 #' Bin the genome
-#'
-#'
+#' 
+#' 
 #' @param species Abbreviation of the genome, pass to
 #' \code{\link[circlize]{read.chromInfo}}.
 #' @param bins Number of bins. The final number of bins is approximately equal
@@ -30,10 +36,13 @@ GHEATMAP_ENV <- new.env()
 #' @return A \code{\link[GenomicRanges:GRanges-class]{GRanges}} object of the
 #' genomic bins.
 #' @examples
-#'
+#' 
+#' 
 #' # There is no example
 #' NULL
-#'
+#' 
+#' 
+#' 
 bin_genome <- function(species = "hg19", bins = 2000, bin_size = NULL, ...) {
   lt <- circlize::read.chromInfo(species = species, ...)
 

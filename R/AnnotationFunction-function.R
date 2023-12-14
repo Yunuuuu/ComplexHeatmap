@@ -47,29 +47,35 @@
 # draw(anno, test = "anno_empty without border")
 
 
+
+
+
+
+
+
 #' Empty Annotation
-#'
+#' 
 #' Empty Annotation
-#'
+#' 
 #' It creates an empty annotation and holds space, later users can add graphics
 #' by \code{\link{decorate_annotation}}. This function is useful when users
 #' have difficulty to implement \code{\link{AnnotationFunction}} object.
-#'
+#' 
 #' In following example, an empty annotation is first created and later points
 #' are added:
-#'
+#' 
 #' \preformatted{ m = matrix(rnorm(100), 10) ht = Heatmap(m, top_annotation =
 #' HeatmapAnnotation(pt = anno_empty())) ht = draw(ht) co =
 #' column_order(ht)[[1]] pt_value = 1:10 decorate_annotation("pt", {
 #' pushViewport(viewport(xscale = c(0.5, ncol(mat)+0.5), yscale =
 #' range(pt_value))) grid.points(seq_len(ncol(mat)), pt_value[co], pch = 16,
 #' default.units = "native") grid.yaxis() popViewport() }) }
-#'
+#' 
 #' And it is similar as using \code{\link{anno_points}}:
-#'
+#' 
 #' \preformatted{ Heatmap(m, top_annotation = HeatmapAnnotation(pt =
 #' anno_points(pt_value))) }
-#'
+#' 
 #' @param which Whether it is a column annotation or a row annotation?
 #' @param border Whether draw borders of the annotation region?
 #' @param zoom If it is true and when the heatmap is split, the empty
@@ -86,12 +92,14 @@
 #' @seealso
 #' \url{https://jokergoo.github.io/ComplexHeatmap-reference/book/heatmap-annotations.html#empty-annotation}
 #' @examples
-#'
-#' anno <- anno_empty()
+#' 
+#' 
+#' anno = anno_empty()
 #' draw(anno, test = "anno_empty")
-#' anno <- anno_empty(border = FALSE)
+#' anno = anno_empty(border = FALSE)
 #' draw(anno, test = "anno_empty without border")
-#'
+#' 
+#' 
 anno_empty <- function(which = c("column", "row"), border = TRUE, zoom = FALSE,
                        width = NULL, height = NULL, show_name = FALSE) {
   if (is.null(.ENV$current_annotation_which)) {
@@ -219,16 +227,22 @@ subset_no <- function(x, i) x
 # draw(anno, test = "matrix, pch is a matrix with NA values")
 
 
+
+
+
+
+
+
 #' Simple Annotation
-#'
+#' 
 #' Simple Annotation
-#'
+#' 
 #' The "simple annotation" is the most widely used annotation type which is
 #' heatmap-like, where the grid colors correspond to the values.
 #' \code{\link{anno_simple}} also supports to add points/symbols on top of the
 #' grids where the it can be normal point (when \code{pch} is set as numbers)
 #' or letters (when \code{pch} is set as single letters).
-#'
+#' 
 #' @param x The value vector. The value can be a vector or a matrix. The length
 #' of the vector or the nrow of the matrix is taken as the number of the
 #' observations of the annotation. The value can be numeric or character and NA
@@ -267,24 +281,26 @@ subset_no <- function(x, i) x
 #' @seealso
 #' \url{https://jokergoo.github.io/ComplexHeatmap-reference/book/heatmap-annotations.html#simple-annotation-as-an-annotation-function}
 #' @examples
-#'
-#' anno <- anno_simple(1:10)
+#' 
+#' 
+#' anno = anno_simple(1:10)
 #' draw(anno, test = "a numeric vector")
-#'
-#' anno <- anno_simple(cbind(1:10, 10:1))
+#' 
+#' anno = anno_simple(cbind(1:10, 10:1))
 #' draw(anno, test = "a matrix")
-#'
-#' anno <- anno_simple(1:10, pch = c(1:4, NA, 6:8, NA, 10))
+#' 
+#' anno = anno_simple(1:10, pch = c(1:4, NA, 6:8, NA, 10))
 #' draw(anno, test = "pch has NA values")
-#'
-#' anno <- anno_simple(1:10, pch = c(rep("A", 5), rep(NA, 5)))
+#' 
+#' anno = anno_simple(1:10, pch = c(rep("A", 5), rep(NA, 5)))
 #' draw(anno, test = "pch has NA values")
-#'
-#' pch <- matrix(1:20, nc = 2)
-#' pch[sample(length(pch), 10)] <- NA
-#' anno <- anno_simple(cbind(1:10, 10:1), pch = pch)
+#' 
+#' pch = matrix(1:20, nc = 2)
+#' pch[sample(length(pch), 10)] = NA
+#' anno = anno_simple(cbind(1:10, 10:1), pch = pch)
 #' draw(anno, test = "matrix, pch is a matrix with NA values")
-#'
+#' 
+#' 
 anno_simple <- function(x, col, na_col = "grey",
                         which = c("column", "row"), border = FALSE, gp = gpar(),
                         pch = NULL, pt_size = unit(1, "snpc") * 0.8, pt_gp = gpar(),
@@ -599,10 +615,16 @@ anno_simple <- function(x, col, na_col = "grey",
 # }
 
 
+
+
+
+
+
+
 #' Image Annotation
-#'
+#' 
 #' Image Annotation
-#'
+#' 
 #' This function supports image formats in \code{png}, \code{svg}, \code{pdf},
 #' \code{eps}, \code{jpeg/jpg}, \code{tiff}.  \code{png}, \code{jpeg/jpg} and
 #' \code{tiff} images are imported by \code{\link[png]{readPNG}},
@@ -614,9 +636,9 @@ anno_simple <- function(x, col, na_col = "grey",
 #' imported by \code{\link[grImport]{PostScriptTrace}} and
 #' \code{\link[grImport]{readPicture}}, later drawn by
 #' \code{\link[grImport]{grid.picture}}.
-#'
+#' 
 #' Different image formats can be mixed in the \code{image} vector.
-#'
+#' 
 #' @param image A vector of file paths of images. The format of the image is
 #' inferred from the suffix name of the image file. NA values or empty strings
 #' in the vector means no image to drawn.
@@ -636,17 +658,19 @@ anno_simple <- function(x, col, na_col = "grey",
 #' @seealso
 #' \url{https://jokergoo.github.io/ComplexHeatmap-reference/book/heatmap-annotations.html#image-annotation}
 #' @examples
-#'
+#' 
+#' 
 #' # download the free icons from https://github.com/Keyamoon/IcoMoon-Free
 #' \dontrun{
-#' image <- sample(dir("~/Downloads/IcoMoon-Free-master/PNG/64px", full.names = TRUE), 10)
-#' anno <- anno_image(image)
+#' image = sample(dir("~/Downloads/IcoMoon-Free-master/PNG/64px", full.names = TRUE), 10)
+#' anno = anno_image(image)
 #' draw(anno, test = "png")
-#' image[1:5] <- ""
-#' anno <- anno_image(image)
+#' image[1:5] = ""
+#' anno = anno_image(image)
 #' draw(anno, test = "some of png")
 #' }
-#'
+#' 
+#' 
 anno_image <- function(image, which = c("column", "row"), border = TRUE,
                        gp = gpar(fill = NA, col = NA), space = unit(1, "mm"),
                        width = NULL, height = NULL) {
@@ -862,12 +886,18 @@ anno_image <- function(image, which = c("column", "row"), border = TRUE,
 # default_axis_param("row")
 
 
+
+
+
+
+
+
 #' The Default Parameters for Annotation Axis
-#'
+#' 
 #' The Default Parameters for Annotation Axis
-#'
+#' 
 #' There are following parameters for the annotation axis:
-#'
+#' 
 #' \describe{ \item{at}{The breaks of axis. By default it is automatically
 #' inferred.} \item{labels}{The corresponding axis labels.}
 #' \item{labels_rot}{The rotation of the axis labels.} \item{gp}{Graphc
@@ -880,16 +910,18 @@ anno_image <- function(image, which = c("column", "row"), border = TRUE,
 #' column annotations of one heatmap might overlap to the neighbouring heatmap,
 #' setting \code{facing} to \code{inside} may invoild it.} \item{direction}{The
 #' direction of the axis. Value should be "normal" or "reverse".} }
-#'
+#' 
 #' All the parameters are passed to \code{\link{annotation_axis_grob}} to
 #' construct an axis grob.
-#'
+#' 
 #' @param which Whether it is for column annotation or row annotation?
 #' @examples
-#'
+#' 
+#' 
 #' default_axis_param("column")
 #' default_axis_param("row")
-#'
+#' 
+#' 
 default_axis_param <- function(which) {
   list(
     at = NULL,
@@ -982,11 +1014,17 @@ construct_axis_grob <- function(axis_param, which, data_scale, format = NULL) {
 # draw(anno, test = "matrix")
 
 
+
+
+
+
+
+
 #' Points Annotation
-#'
+#' 
 #' Points Annotation
-#'
-#'
+#' 
+#' 
 #' @param x The value vector. The value can be a vector or a matrix. The length
 #' of the vector or the number of rows of the matrix is taken as the number of
 #' the observations of the annotation.
@@ -1015,12 +1053,14 @@ construct_axis_grob <- function(axis_param, which, data_scale, format = NULL) {
 #' @seealso
 #' \url{https://jokergoo.github.io/ComplexHeatmap-reference/book/heatmap-annotations.html#points-annotation}
 #' @examples
-#'
-#' anno <- anno_points(runif(10))
+#' 
+#' 
+#' anno = anno_points(runif(10))
 #' draw(anno, test = "anno_points")
-#' anno <- anno_points(matrix(runif(20), nc = 2), pch = 1:2)
+#' anno = anno_points(matrix(runif(20), nc = 2), pch = 1:2)
 #' draw(anno, test = "matrix")
-#'
+#' 
+#' 
 anno_points <- function(x, which = c("column", "row"), border = TRUE, gp = gpar(), pch = 16,
                         size = unit(2, "mm"), ylim = NULL, extend = 0.05, axis = TRUE,
                         axis_param = default_axis_param(which), width = NULL, height = NULL, ...) {
@@ -1271,11 +1311,17 @@ update_anno_extend <- function(anno, axis_grob, axis_param) {
 # draw(anno, test = "matrix")
 
 
+
+
+
+
+
+
 #' Lines Annotation
-#'
+#' 
 #' Lines Annotation
-#'
-#'
+#' 
+#' 
 #' @param x The value vector. The value can be a vector or a matrix. The length
 #' of the vector or the number of rows of the matrix is taken as the number of
 #' the observations of the annotation.
@@ -1308,17 +1354,17 @@ update_anno_extend <- function(anno, axis_grob, axis_param) {
 #' @seealso
 #' \url{https://jokergoo.github.io/ComplexHeatmap-reference/book/heatmap-annotations.html#lines-annotation}
 #' @examples
-#'
-#' anno <- anno_lines(runif(10))
+#' 
+#' 
+#' anno = anno_lines(runif(10))
 #' draw(anno, test = "anno_lines")
-#' anno <- anno_lines(cbind(c(1:5, 1:5), c(5:1, 5:1)), gp = gpar(col = 2:3))
+#' anno = anno_lines(cbind(c(1:5, 1:5), c(5:1, 5:1)), gp = gpar(col = 2:3))
 #' draw(anno, test = "matrix")
-#' anno <- anno_lines(cbind(c(1:5, 1:5), c(5:1, 5:1)),
-#'   gp = gpar(col = 2:3),
-#'   add_points = TRUE, pt_gp = gpar(col = 5:6), pch = c(1, 16)
-#' )
+#' anno = anno_lines(cbind(c(1:5, 1:5), c(5:1, 5:1)), gp = gpar(col = 2:3),
+#' 	add_points = TRUE, pt_gp = gpar(col = 5:6), pch = c(1, 16))
 #' draw(anno, test = "matrix")
-#'
+#' 
+#' 
 anno_lines <- function(x, which = c("column", "row"), border = TRUE, gp = gpar(),
                        add_points = smooth, smooth = FALSE, pch = 16, size = unit(2, "mm"), pt_gp = gpar(), ylim = NULL,
                        extend = 0.05, axis = TRUE, axis_param = default_axis_param(which),
@@ -1592,11 +1638,17 @@ anno_lines <- function(x, which = c("column", "row"), border = TRUE, gp = gpar()
 # draw(anno, test = "proportion matrix")
 
 
+
+
+
+
+
+
 #' Barplot Annotation
-#'
+#' 
 #' Barplot Annotation
-#'
-#'
+#' 
+#' 
 #' @param x The value vector. The value can be a vector or a matrix. The length
 #' of the vector or the number of rows of the matrix is taken as the number of
 #' the observations of the annotation. If \code{x} is a vector, the barplots
@@ -1638,15 +1690,17 @@ anno_lines <- function(x, which = c("column", "row"), border = TRUE, gp = gpar()
 #' @seealso
 #' \url{https://jokergoo.github.io/ComplexHeatmap-reference/book/heatmap-annotations.html#barplot_annotation}
 #' @examples
-#'
-#' anno <- anno_barplot(1:10)
+#' 
+#' 
+#' anno = anno_barplot(1:10)
 #' draw(anno, test = "a vector")
-#'
-#' m <- matrix(runif(4 * 10), nc = 4)
-#' m <- t(apply(m, 1, function(x) x / sum(x)))
-#' anno <- anno_barplot(m, gp = gpar(fill = 2:5), bar_width = 1, height = unit(6, "cm"))
+#' 
+#' m = matrix(runif(4*10), nc = 4)
+#' m = t(apply(m, 1, function(x) x/sum(x)))
+#' anno = anno_barplot(m, gp = gpar(fill = 2:5), bar_width = 1, height = unit(6, "cm"))
 #' draw(anno, test = "proportion matrix")
-#'
+#' 
+#' 
 anno_barplot <- function(x, baseline = 0, which = c("column", "row"), border = TRUE, bar_width = 0.6,
                          beside = FALSE, attach = FALSE,
                          gp = gpar(fill = "#CCCCCC"), ylim = NULL, extend = 0.05, axis = TRUE,
@@ -1992,11 +2046,17 @@ anno_barplot <- function(x, baseline = 0, which = c("column", "row"), border = T
 # draw(anno, test = "anno_boxplot with gp")
 
 
+
+
+
+
+
+
 #' Boxplot Annotation
-#'
+#' 
 #' Boxplot Annotation
-#'
-#'
+#' 
+#' 
 #' @param x A matrix or a list. If \code{x} is a matrix and if \code{which} is
 #' \code{column}, statistics for boxplots are calculated by columns, if
 #' \code{which} is \code{row}, the calculation is done by rows.
@@ -2028,14 +2088,16 @@ anno_barplot <- function(x, baseline = 0, which = c("column", "row"), border = T
 #' @seealso
 #' \url{https://jokergoo.github.io/ComplexHeatmap-reference/book/heatmap-annotations.html#box-annotation}
 #' @examples
-#'
+#' 
+#' 
 #' set.seed(123)
-#' m <- matrix(rnorm(100), 10)
-#' anno <- anno_boxplot(m, height = unit(4, "cm"))
+#' m = matrix(rnorm(100), 10)
+#' anno = anno_boxplot(m, height = unit(4, "cm"))
 #' draw(anno, test = "anno_boxplot")
-#' anno <- anno_boxplot(m, height = unit(4, "cm"), gp = gpar(fill = 1:10))
+#' anno = anno_boxplot(m, height = unit(4, "cm"), gp = gpar(fill = 1:10))
 #' draw(anno, test = "anno_boxplot with gp")
-#'
+#' 
+#' 
 anno_boxplot <- function(x, which = c("column", "row"), border = TRUE,
                          gp = gpar(fill = "#CCCCCC"), ylim = NULL, extend = 0.05, outline = TRUE, box_width = 0.6,
                          add_points = FALSE, pch = 16, size = unit(4, "pt"), pt_gp = gpar(), axis = TRUE,
@@ -2320,11 +2382,17 @@ anno_boxplot <- function(x, which = c("column", "row"), border = TRUE,
 # draw(anno, test = "row histogram with color")
 
 
+
+
+
+
+
+
 #' Histogram Annotation
-#'
+#' 
 #' Histogram Annotation
-#'
-#'
+#' 
+#' 
 #' @param x A matrix or a list. If \code{x} is a matrix and if \code{which} is
 #' \code{column}, statistics for boxplots are calculated by columns, if
 #' \code{which} is \code{row}, the calculation is done by rows.
@@ -2346,15 +2414,17 @@ anno_boxplot <- function(x, which = c("column", "row"), border = TRUE,
 #' @seealso
 #' \url{https://jokergoo.github.io/ComplexHeatmap-reference/book/heatmap-annotations.html#histogram-annotation}
 #' @examples
-#'
-#' m <- matrix(rnorm(1000), nc = 10)
-#' anno <- anno_histogram(t(m), which = "row")
+#' 
+#' 
+#' m = matrix(rnorm(1000), nc = 10)
+#' anno = anno_histogram(t(m), which = "row")
 #' draw(anno, test = "row histogram")
-#' anno <- anno_histogram(t(m), which = "row", gp = gpar(fill = 1:10))
+#' anno = anno_histogram(t(m), which = "row", gp = gpar(fill = 1:10))
 #' draw(anno, test = "row histogram with color")
-#' anno <- anno_histogram(t(m), which = "row", n_breaks = 20)
+#' anno = anno_histogram(t(m), which = "row", n_breaks = 20)
 #' draw(anno, test = "row histogram with color")
-#'
+#' 
+#' 
 anno_histogram <- function(x, which = c("column", "row"), n_breaks = 11,
                            border = FALSE, gp = gpar(fill = "#CCCCCC"),
                            axis = TRUE, axis_param = default_axis_param(which),
@@ -2533,11 +2603,17 @@ anno_histogram <- function(x, which = c("column", "row"), n_breaks = 11,
 # draw(anno, test = "heatmap, colors")
 
 
+
+
+
+
+
+
 #' Density Annotation
-#'
+#' 
 #' Density Annotation
-#'
-#'
+#' 
+#' 
 #' @param x A matrix or a list. If \code{x} is a matrix and if \code{which} is
 #' \code{column}, statistics for boxplots are calculated by columns, if
 #' \code{which} is \code{row}, the calculation is done by rows.
@@ -2570,20 +2646,20 @@ anno_histogram <- function(x, which = c("column", "row"), n_breaks = 11,
 #' @seealso
 #' \url{https://jokergoo.github.io/ComplexHeatmap-reference/book/heatmap-annotations.html#density-annotation}
 #' @examples
-#'
-#' m <- matrix(rnorm(100), 10)
-#' anno <- anno_density(m, which = "row")
+#' 
+#' 
+#' m = matrix(rnorm(100), 10)
+#' anno = anno_density(m, which = "row")
 #' draw(anno, test = "normal density")
-#' anno <- anno_density(m, which = "row", type = "violin")
+#' anno = anno_density(m, which = "row", type = "violin")
 #' draw(anno, test = "violin")
-#' anno <- anno_density(m, which = "row", type = "heatmap")
+#' anno = anno_density(m, which = "row", type = "heatmap")
 #' draw(anno, test = "heatmap")
-#' anno <- anno_density(m,
-#'   which = "row", type = "heatmap",
-#'   heatmap_colors = c("white", "orange")
-#' )
+#' anno = anno_density(m, which = "row", type = "heatmap", 
+#'     heatmap_colors = c("white", "orange"))
 #' draw(anno, test = "heatmap, colors")
-#'
+#' 
+#' 
 anno_density <- function(x, which = c("column", "row"),
                          type = c("lines", "violin", "heatmap"), xlim = NULL, max_density = NULL,
                          heatmap_colors = rev(brewer.pal(name = "RdYlBu", n = 11)),
@@ -2929,11 +3005,17 @@ anno_density <- function(x, which = c("column", "row"),
 # draw(anno, test = "with rotations")
 
 
+
+
+
+
+
+
 #' Text Annotation
-#'
+#' 
 #' Text Annotation
-#'
-#'
+#' 
+#' 
 #' @param x A vector of text.
 #' @param which Whether it is a column annotation or a row annotation?
 #' @param gp Graphic parameters.
@@ -2956,26 +3038,24 @@ anno_density <- function(x, which = c("column", "row"),
 #' @seealso
 #' \url{https://jokergoo.github.io/ComplexHeatmap-reference/book/heatmap-annotations.html#text-annotation}
 #' @examples
-#'
-#' anno <- anno_text(month.name)
+#' 
+#' 
+#' anno = anno_text(month.name)
 #' draw(anno, test = "month names")
-#' anno <- anno_text(month.name, gp = gpar(fontsize = 16))
+#' anno = anno_text(month.name, gp = gpar(fontsize = 16))
 #' draw(anno, test = "month names with fontsize")
-#' anno <- anno_text(month.name, gp = gpar(fontsize = 1:12 + 4))
+#' anno = anno_text(month.name, gp = gpar(fontsize = 1:12+4))
 #' draw(anno, test = "month names with changing fontsize")
-#' anno <- anno_text(month.name, which = "row")
+#' anno = anno_text(month.name, which = "row")
 #' draw(anno, test = "month names on rows")
-#' anno <- anno_text(month.name,
-#'   location = 0, rot = 45,
-#'   just = "left", gp = gpar(col = 1:12)
-#' )
+#' anno = anno_text(month.name, location = 0, rot = 45, 
+#'     just = "left", gp = gpar(col = 1:12))
 #' draw(anno, test = "with rotations")
-#' anno <- anno_text(month.name,
-#'   location = 1,
-#'   rot = 45, just = "right", gp = gpar(fontsize = 1:12 + 4)
-#' )
+#' anno = anno_text(month.name, location = 1, 
+#'     rot = 45, just = "right", gp = gpar(fontsize = 1:12+4))
 #' draw(anno, test = "with rotations")
-#'
+#' 
+#' 
 anno_text <- function(x, which = c("column", "row"), gp = gpar(),
                       rot = guess_rot(), just = guess_just(),
                       offset = guess_location(), location = guess_location(),
@@ -3153,11 +3233,17 @@ anno_text <- function(x, which = c("column", "row"), gp = gpar(),
 # draw(anno, test = "joyplot")
 
 
+
+
+
+
+
+
 #' Joyplot Annotation
-#'
+#' 
 #' Joyplot Annotation
-#'
-#'
+#' 
+#' 
 #' @param x A matrix or a list. If \code{x} is a matrix or a data frame,
 #' columns correspond to observations.
 #' @param which Whether it is a column annotation or a row annotation?
@@ -3180,21 +3266,23 @@ anno_text <- function(x, which = c("column", "row"), gp = gpar(),
 #' @seealso
 #' \url{https://jokergoo.github.io/ComplexHeatmap-reference/book/heatmap-annotations.html#joyplot-annotation}
 #' @examples
-#'
-#' m <- matrix(rnorm(1000), nc = 10)
-#' lt <- apply(m, 2, function(x) data.frame(density(x)[c("x", "y")]))
-#' anno <- anno_joyplot(lt, width = unit(4, "cm"), which = "row")
+#' 
+#' 
+#' m = matrix(rnorm(1000), nc = 10)
+#' lt = apply(m, 2, function(x) data.frame(density(x)[c("x", "y")]))
+#' anno = anno_joyplot(lt, width = unit(4, "cm"), which = "row")
 #' draw(anno, test = "joyplot")
-#' anno <- anno_joyplot(lt, width = unit(4, "cm"), which = "row", gp = gpar(fill = 1:10))
+#' anno = anno_joyplot(lt, width = unit(4, "cm"), which = "row", gp = gpar(fill = 1:10))
 #' draw(anno, test = "joyplot + col")
-#' anno <- anno_joyplot(lt, width = unit(4, "cm"), which = "row", scale = 1)
+#' anno = anno_joyplot(lt, width = unit(4, "cm"), which = "row", scale = 1)
 #' draw(anno, test = "joyplot + scale")
-#'
-#' m <- matrix(rnorm(5000), nc = 50)
-#' lt <- apply(m, 2, function(x) data.frame(density(x)[c("x", "y")]))
-#' anno <- anno_joyplot(lt, width = unit(4, "cm"), which = "row", gp = gpar(fill = NA), scale = 4)
+#' 
+#' m = matrix(rnorm(5000), nc = 50)
+#' lt = apply(m, 2, function(x) data.frame(density(x)[c("x", "y")]))
+#' anno = anno_joyplot(lt, width = unit(4, "cm"), which = "row", gp = gpar(fill = NA), scale = 4)
 #' draw(anno, test = "joyplot")
-#'
+#' 
+#' 
 anno_joyplot <- function(x, which = c("column", "row"), gp = gpar(fill = "#000000"),
                          scale = 2, transparency = 0.6,
                          axis = TRUE, axis_param = default_axis_param(which),
@@ -3404,12 +3492,18 @@ anno_joyplot <- function(x, which = c("column", "row"), gp = gpar(fill = "#00000
 # draw(anno, test = "horizon chart, col")
 
 
+
+
+
+
+
+
 #' Horizon chart Annotation
-#'
+#' 
 #' Horizon chart Annotation
-#'
+#' 
 #' Horizon chart as row annotation is only supported.
-#'
+#' 
 #' @param x A matrix or a list. If \code{x} is a matrix or a data frame,
 #' columns correspond to observations.
 #' @param which Whether it is a column annotation or a row annotation?
@@ -3438,28 +3532,24 @@ anno_joyplot <- function(x, which = c("column", "row"), gp = gpar(fill = "#00000
 #' @seealso
 #' \url{https://jokergoo.github.io/ComplexHeatmap-reference/book/heatmap-annotations.html#horizon-chart-annotation}
 #' @examples
-#'
-#' lt <- lapply(1:20, function(x) cumprod(1 + runif(1000, -x / 100, x / 100)) - 1)
-#' anno <- anno_horizon(lt, which = "row")
+#' 
+#' 
+#' lt = lapply(1:20, function(x) cumprod(1 + runif(1000, -x/100, x/100)) - 1)
+#' anno = anno_horizon(lt, which = "row")
 #' draw(anno, test = "horizon chart")
-#' anno <- anno_horizon(lt,
-#'   which = "row",
-#'   gp = gpar(pos_fill = "orange", neg_fill = "darkgreen")
-#' )
+#' anno = anno_horizon(lt, which = "row", 
+#'     gp = gpar(pos_fill = "orange", neg_fill = "darkgreen"))
 #' draw(anno, test = "horizon chart, col")
-#' anno <- anno_horizon(lt, which = "row", negative_from_top = TRUE)
+#' anno = anno_horizon(lt, which = "row", negative_from_top = TRUE)
 #' draw(anno, test = "horizon chart + negative_from_top")
-#' anno <- anno_horizon(lt, which = "row", gap = unit(1, "mm"))
+#' anno = anno_horizon(lt, which = "row", gap = unit(1, "mm"))
 #' draw(anno, test = "horizon chart + gap")
-#' anno <- anno_horizon(lt,
-#'   which = "row",
-#'   gp = gpar(
-#'     pos_fill = rep(c("orange", "red"), each = 10),
-#'     neg_fill = rep(c("darkgreen", "blue"), each = 10)
-#'   )
-#' )
+#' anno = anno_horizon(lt, which = "row", 
+#'     gp = gpar(pos_fill = rep(c("orange", "red"), each = 10),
+#'     neg_fill = rep(c("darkgreen", "blue"), each = 10)))
 #' draw(anno, test = "horizon chart, col")
-#'
+#' 
+#' 
 anno_horizon <- function(x, which = c("column", "row"),
                          gp = gpar(pos_fill = "#D73027", neg_fill = "#313695"),
                          n_slice = 4, slice_size = NULL, negative_from_top = FALSE,
@@ -3854,14 +3944,20 @@ row_anno_text <- function(...) {
 # Heatmap(m) + rowAnnotation(mark = anno)
 
 
+
+
+
+
+
+
 #' Link annotation with labels
-#'
+#' 
 #' Link annotation with labels
-#'
+#' 
 #' Sometimes there are many rows or columns in the heatmap and we want to mark
 #' some of the rows. This annotation function is used to mark these rows and
 #' connect labels and corresponding rows with links.
-#'
+#' 
 #' @param at Numeric index from the original matrix.
 #' @param labels Corresponding labels.
 #' @param which Whether it is a column annotation or a row annotation?
@@ -3869,12 +3965,12 @@ row_anno_text <- function(...) {
 #' are "top" and "bottom"; If it is a row annotation, valid values are "left"
 #' and "right".
 #' @param lines_gp Please use \code{link_gp} instead.
-#' @param link_gp Graphic settings for the segments.
 #' @param labels_gp Graphic settings for the labels.
 #' @param labels_rot Rotations of labels, scalar.
 #' @param padding Padding between neighbouring labels in the plot.
 #' @param link_width Width of the segments.
 #' @param link_height Similar as \code{link_width}, used for column annotation.
+#' @param link_gp Graphic settings for the segments.
 #' @param extend By default, the region for the labels has the same width (if
 #' it is a column annotation) or same height (if it is a row annotation) as the
 #' heatmap. The size can be extended by this options. The value can be a
@@ -3885,15 +3981,17 @@ row_anno_text <- function(...) {
 #' @seealso
 #' \url{https://jokergoo.github.io/ComplexHeatmap-reference/book/heatmap-annotations.html#mark-annotation}
 #' @examples
-#'
-#' anno <- anno_mark(at = c(1:4, 20, 60, 97:100), labels = month.name[1:10], which = "row")
+#' 
+#' 
+#' anno = anno_mark(at = c(1:4, 20, 60, 97:100), labels = month.name[1:10], which = "row")
 #' draw(anno, index = 1:100, test = "anno_mark")
-#'
-#' m <- matrix(1:1000, byrow = TRUE, nr = 100)
-#' anno <- anno_mark(at = c(1:4, 20, 60, 97:100), labels = month.name[1:10], which = "row")
+#' 
+#' m = matrix(1:1000, byrow = TRUE, nr = 100)
+#' anno = anno_mark(at = c(1:4, 20, 60, 97:100), labels = month.name[1:10], which = "row")
 #' Heatmap(m, cluster_rows = FALSE, cluster_columns = FALSE) + rowAnnotation(mark = anno)
 #' Heatmap(m) + rowAnnotation(mark = anno)
-#'
+#' 
+#' 
 anno_mark <- function(at, labels, which = c("column", "row"),
                       side = ifelse(which == "column", "top", "right"),
                       lines_gp = gpar(), labels_gp = gpar(),
@@ -4162,19 +4260,28 @@ subset_by_intersect <- function(x, i) {
 #
 
 
+
+
+
+
+
+
 #' Link Annotation
-#'
+#' 
 #' Link Annotation
-#'
+#' 
 #' This function is the same as \code{\link{anno_zoom}}. It links subsets of
 #' rows or columns to a list of graphic regions.
-#'
+#' 
 #' @param ... Pass to \code{\link{anno_zoom}}.
 #' @examples
-#'
+#' 
+#' 
 #' # There is no example
 #' NULL
-#'
+#' 
+#' 
+#' 
 anno_link <- function(...) {
   anno_zoom(...)
 }
@@ -4225,20 +4332,26 @@ anno_link <- function(...) {
 #
 
 
+
+
+
+
+
+
 #' Summary Annotation
-#'
+#' 
 #' Summary Annotation
-#'
+#' 
 #' \code{anno_summary} is a special annotation function that it only works for
 #' one-column or one-row heatmap.  It shows the summary of the values in the
 #' heatmap. If the values in the heatmap is discrete, the proportion of each
 #' level (the sum is normalized to 1) is visualized as stacked barplot. If the
 #' heatmap is split into multiple slices, multiple bars are put in the
 #' annotation. If the value is continuous, boxplot is used.
-#'
+#' 
 #' In the barplot, the color schema is used as the same as the heatmap, while
 #' for the boxplot, the color needs to be controlled by \code{gp}.
-#'
+#' 
 #' @param which Whether it is a column annotation or a row annotation?
 #' @param border Wether draw borders of the annotation region?
 #' @param bar_width Relative width of the bars. The value should be smaller
@@ -4267,16 +4380,18 @@ anno_link <- function(...) {
 #' @seealso
 #' \url{https://jokergoo.github.io/ComplexHeatmap-reference/book/heatmap-annotations.html#summary-annotation}
 #' @examples
-#'
-#' ha <- HeatmapAnnotation(summary = anno_summary(height = unit(4, "cm")))
-#' v <- sample(letters[1:2], 50, replace = TRUE)
-#' split <- sample(letters[1:2], 50, replace = TRUE)
+#' 
+#' 
+#' ha = HeatmapAnnotation(summary = anno_summary(height = unit(4, "cm")))
+#' v = sample(letters[1:2], 50, replace = TRUE)
+#' split = sample(letters[1:2], 50, replace = TRUE)
 #' Heatmap(v, top_annotation = ha, width = unit(1, "cm"), split = split)
-#'
-#' ha <- HeatmapAnnotation(summary = anno_summary(gp = gpar(fill = 2:3), height = unit(4, "cm")))
-#' v <- rnorm(50)
+#' 
+#' ha = HeatmapAnnotation(summary = anno_summary(gp = gpar(fill = 2:3), height = unit(4, "cm")))
+#' v = rnorm(50)
 #' Heatmap(v, top_annotation = ha, width = unit(1, "cm"), split = split)
-#'
+#' 
+#' 
 anno_summary <- function(which = c("column", "row"), border = TRUE, bar_width = 0.8,
                          axis = TRUE, axis_param = default_axis_param(which),
                          ylim = NULL, extend = 0.05, outline = TRUE, box_width = 0.6,
@@ -4497,13 +4612,19 @@ anno_summary <- function(which = c("column", "row"), border = TRUE, bar_width = 
 # )
 
 
+
+
+
+
+
+
 #' Block annotation
-#'
+#' 
 #' Block annotation
-#'
+#' 
 #' The block annotation is used for representing slices. The length of all
 #' arguments should be 1 or the number of slices.
-#'
+#' 
 #' @param align_to If you don't want to create block annotation for all slices,
 #' you can specify a list of indices that cover continuously adjacent rows or
 #' columns.
@@ -4530,69 +4651,60 @@ anno_summary <- function(which = c("column", "row"), border = TRUE, bar_width = 
 #' @seealso
 #' \url{https://jokergoo.github.io/ComplexHeatmap-reference/book/heatmap-annotations.html#block-annotation}
 #' @examples
-#'
-#' Heatmap(matrix(rnorm(100), 10),
-#'   top_annotation = HeatmapAnnotation(foo = anno_block(
-#'     gp = gpar(fill = 2:4),
-#'     labels = c("group1", "group2", "group3"), labels_gp = gpar(col = "white")
-#'   )),
-#'   column_km = 3,
-#'   left_annotation = rowAnnotation(foo = anno_block(
-#'     gp = gpar(fill = 2:4),
-#'     labels = c("group1", "group2", "group3"), labels_gp = gpar(col = "white")
-#'   )),
-#'   row_km = 3
-#' )
-#'
+#' 
+#' 
+#' Heatmap(matrix(rnorm(100), 10), 
+#'     top_annotation = HeatmapAnnotation(foo = anno_block(gp = gpar(fill = 2:4),
+#'         labels = c("group1", "group2", "group3"), labels_gp = gpar(col = "white"))),
+#'     column_km = 3,
+#'     left_annotation = rowAnnotation(foo = anno_block(gp = gpar(fill = 2:4),
+#'         labels = c("group1", "group2", "group3"), labels_gp = gpar(col = "white"))),
+#'     row_km = 3)
+#' 
 #' # =============  set the panel_fun argument ==============
-#' col <- c("1" = "red", "2" = "blue", "A" = "green", "B" = "orange")
-#' Heatmap(matrix(rnorm(100), 10), row_km = 2, row_split = sample(c("A", "B"), 10, replace = TRUE)) +
-#'   rowAnnotation(foo = anno_block(
-#'     panel_fun = function(index, levels) {
-#'       grid.rect(gp = gpar(fill = col[levels[2]], col = "black"))
-#'       grid.text(paste(levels, collapse = ","), 0.5, 0.5,
-#'         rot = 90,
-#'         gp = gpar(col = col[levels[1]])
-#'       )
-#'     }
-#'   ))
-#'
-#' labels <- c("1" = "one", "2" = "two", "A" = "Group_A", "B" = "Group_B")
-#' Heatmap(matrix(rnorm(100), 10), row_km = 2, row_split = sample(c("A", "B"), 10, replace = TRUE)) +
-#'   rowAnnotation(foo = anno_block(panel_fun = function(index, levels) {
-#'     grid.rect(gp = gpar(fill = col[levels[2]], col = "black"))
-#'     grid.text(paste(labels[levels], collapse = ","), 0.5, 0.5,
-#'       rot = 90,
-#'       gp = gpar(col = col[levels[1]])
-#'     )
-#'   }))
-#'
-#' Heatmap(matrix(rnorm(100), 10), row_km = 2, row_split = sample(c("A", "B"), 10, replace = TRUE)) +
-#'   rowAnnotation(foo = anno_block(
-#'     panel_fun = function(index, levels) {
-#'       grid.rect(gp = gpar(fill = col[levels[2]], col = "black"))
-#'       txt <- paste(levels, collapse = ",")
-#'       txt <- paste0(txt, "\n", length(index), " rows")
-#'       grid.text(txt, 0.5, 0.5,
-#'         rot = 0,
-#'         gp = gpar(col = col[levels[1]])
-#'       )
-#'     },
-#'     width = unit(3, "cm")
-#'   ))
-#'
+#' col = c("1" = "red", "2" = "blue", "A" = "green", "B" = "orange")
+#' Heatmap(matrix(rnorm(100), 10), row_km = 2, row_split = sample(c("A", "B"), 10, replace = TRUE)) + 
+#' rowAnnotation(foo = anno_block(
+#' 	panel_fun = function(index, levels) {
+#' 		grid.rect(gp = gpar(fill = col[levels[2]], col = "black"))
+#' 		grid.text(paste(levels, collapse = ","), 0.5, 0.5, rot = 90,
+#' 			gp = gpar(col = col[levels[1]]))
+#' 	}
+#' ))
+#' 
+#' labels = c("1" = "one", "2" = "two", "A" = "Group_A", "B" = "Group_B")
+#' Heatmap(matrix(rnorm(100), 10), row_km = 2, row_split = sample(c("A", "B"), 10, replace = TRUE)) + 
+#' rowAnnotation(foo = anno_block(panel_fun = function(index, levels) {
+#' 	grid.rect(gp = gpar(fill = col[levels[2]], col = "black"))
+#' 	grid.text(paste(labels[levels], collapse = ","), 0.5, 0.5, rot = 90,
+#' 		gp = gpar(col = col[levels[1]]))
+#' }))
+#' 
+#' Heatmap(matrix(rnorm(100), 10), row_km = 2, row_split = sample(c("A", "B"), 10, replace = TRUE)) + 
+#' rowAnnotation(foo = anno_block(
+#' 	panel_fun = function(index, levels) {
+#' 		grid.rect(gp = gpar(fill = col[levels[2]], col = "black"))
+#' 		txt = paste(levels, collapse = ",")
+#' 		txt = paste0(txt, "\n", length(index), " rows")
+#' 		grid.text(txt, 0.5, 0.5, rot = 0,
+#' 			gp = gpar(col = col[levels[1]]))
+#' 	},
+#' 	width = unit(3, "cm")
+#' ))
+#' 
 #' # =========== set align_to ################
-#' col <- c("foo" = "red", "bar" = "blue")
+#' col = c("foo" = "red", "bar" = "blue")
 #' Heatmap(matrix(rnorm(100), 10), cluster_rows = FALSE) +
-#'   rowAnnotation(foo = anno_block(
-#'     align_to = list(foo = 1:4, bar = 6:10),
-#'     panel_fun = function(index, nm) {
-#'       grid.rect(gp = gpar(fill = col[nm]))
-#'       grid.text(nm, 0.5, 0.5)
-#'     },
-#'     width = unit(2, "cm")
-#'   ))
-#'
+#' rowAnnotation(foo = anno_block(
+#' 	align_to = list(foo = 1:4, bar = 6:10),
+#' 	panel_fun = function(index, nm) {
+#' 		grid.rect(gp = gpar(fill = col[nm]))
+#' 		grid.text(nm, 0.5, 0.5)
+#' 	},
+#' 	width = unit(2, "cm"))
+#' )
+#' 
+#' 
 anno_block <- function(align_to = NULL, gp = gpar(), labels = NULL, labels_gp = gpar(),
                        labels_rot = ifelse(which == "row", 90, 0),
                        labels_offset = unit(0.5, "npc"), labels_just = "center",
@@ -4780,13 +4892,19 @@ anno_block <- function(align_to = NULL, gp = gpar(), labels = NULL, labels_gp = 
 #
 
 
+
+
+
+
+
+
 #' Zoom annotation
-#'
+#' 
 #' Zoom annotation
-#'
+#' 
 #' \code{\link{anno_zoom}} creates several plotting regions (boxes) which can
 #' be corresponded to subsets of rows/columns in the heatmap.
-#'
+#' 
 #' @param align_to It defines how the boxes correspond to the rows or the
 #' columns in the heatmap. If the value is a list of indices, each box
 #' corresponds to the rows or columns with indices in one vector in the list.
@@ -4807,9 +4925,9 @@ anno_block <- function(align_to = NULL, gp = gpar(), labels = NULL, labels_gp = 
 #' as relative fractions of the total height/width of the heatmap. The value of
 #' \code{size} can also be absolute units.
 #' @param gap Gaps between boxes.
-#' @param link_gp Graphic settings for the segments.
 #' @param link_width Width of the segments.
 #' @param link_height Similar as \code{link_width}, used for column annotation.
+#' @param link_gp Graphic settings for the segments.
 #' @param extend By default, the region for the labels has the same width (if
 #' it is a column annotation) or same height (if it is a row annotation) as the
 #' heatmap. The size can be extended by this options. The value can be a
@@ -4825,28 +4943,26 @@ anno_block <- function(align_to = NULL, gp = gpar(), labels = NULL, labels_gp = 
 #' @seealso
 #' \url{https://jokergoo.github.io/ComplexHeatmap-reference/book/heatmap-annotations.html#zoom-annotation}
 #' @examples
-#'
+#' 
+#' 
 #' set.seed(123)
-#' m <- matrix(rnorm(100 * 10), nrow = 100)
-#' subgroup <- sample(letters[1:3], 100, replace = TRUE, prob = c(1, 5, 10))
-#' rg <- range(m)
-#' panel_fun <- function(index, nm) {
-#'   pushViewport(viewport(xscale = rg, yscale = c(0, 2)))
-#'   grid.rect()
-#'   grid.xaxis(gp = gpar(fontsize = 8))
-#'   grid.boxplot(m[index, ], pos = 1, direction = "horizontal")
-#'   grid.text(paste("distribution of group", nm), mean(rg),
-#'     y = 1.9,
-#'     just = "top", default.units = "native", gp = gpar(fontsize = 10)
-#'   )
-#'   popViewport()
+#' m = matrix(rnorm(100*10), nrow = 100)
+#' subgroup = sample(letters[1:3], 100, replace = TRUE, prob = c(1, 5, 10))
+#' rg = range(m)
+#' panel_fun = function(index, nm) {
+#' 	pushViewport(viewport(xscale = rg, yscale = c(0, 2)))
+#' 	grid.rect()
+#' 	grid.xaxis(gp = gpar(fontsize = 8))
+#' 	grid.boxplot(m[index, ], pos = 1, direction = "horizontal")
+#' 	grid.text(paste("distribution of group", nm), mean(rg), y = 1.9, 
+#' 		just = "top", default.units = "native", gp = gpar(fontsize = 10))
+#' 	popViewport()
 #' }
-#' anno <- anno_zoom(
-#'   align_to = subgroup, which = "row", panel_fun = panel_fun,
-#'   size = unit(2, "cm"), gap = unit(1, "cm"), width = unit(4, "cm")
-#' )
+#' anno = anno_zoom(align_to = subgroup, which = "row", panel_fun = panel_fun, 
+#' 	size = unit(2, "cm"), gap = unit(1, "cm"), width = unit(4, "cm"))
 #' Heatmap(m, right_annotation = rowAnnotation(foo = anno), row_split = subgroup)
-#'
+#' 
+#' 
 anno_zoom <- function(align_to, panel_fun = function(index, nm = NULL) {
                         grid.rect()
                       },
@@ -5346,47 +5462,55 @@ anno_zoom <- function(align_to, panel_fun = function(index, nm = NULL) {
 # draw(ht, annotation_legend_list = list(lgd))
 
 
+
+
+
+
+
+
 #' Customized annotation
-#'
+#' 
 #' Customized annotation
-#'
+#' 
 #' Functions in \code{graphics} define simple graphics drawn in each annotation
 #' cell. The function takes four arguments:
-#'
+#' 
 #' \describe{ \item{x,y}{Center of the annotation cell.} \item{w,h}{Width and
 #' height of the annotation cell.} }
-#'
+#' 
 #' @param x A categorical variable.
 #' @param graphics A list of functions that define graphics for each level in
 #' \code{x}.
 #' @param which Is it a row annotation or a column annotation?
+#' @param border Whether to draw border.
 #' @param width Width of the annotation. The value should be an absolute unit.
 #' Width is not allowed to be set for column annotation.
 #' @param height Height of the annotation. The value should be an absolute
 #' unit. Height is not allowed to be set for row annotation.
-#' @param border Whether to draw border.
 #' @param verbose Whether to print messages.
 #' @return An annotation function which can be used in
 #' \code{\link{HeatmapAnnotation}}.
 #' @examples
-#'
-#' x <- sort(sample(letters[1:3], 10, replace = TRUE))
-#' graphics <- list(
-#'   "a" = function(x, y, w, h) grid.points(x, y, pch = 16),
-#'   "b" = function(x, y, w, h) grid.rect(x, y, w * 0.8, h * 0.8, gp = gpar(fill = "red")),
-#'   "c" = function(x, y, w, h) grid.segments(x - 0.5 * w, y - 0.5 * h, x + 0.5 * w, y + 0.5 * h, gp = gpar(lty = 2))
+#' 
+#' 
+#' x = sort(sample(letters[1:3], 10, replace = TRUE))
+#' graphics = list(
+#'     "a" = function(x, y, w, h) grid.points(x, y, pch = 16),
+#'     "b" = function(x, y, w, h) grid.rect(x, y, w*0.8, h*0.8, gp = gpar(fill = "red")),
+#'     "c" = function(x, y, w, h) grid.segments(x - 0.5*w, y - 0.5*h, x + 0.5*w, y + 0.5*h, gp = gpar(lty = 2))
 #' )
-#'
-#' anno <- anno_customize(x, graphics = graphics)
-#'
-#' m <- matrix(rnorm(100), 10)
+#' 
+#' anno = anno_customize(x, graphics = graphics)
+#' 
+#' m = matrix(rnorm(100), 10)
 #' Heatmap(m, top_annotation = HeatmapAnnotation(bar = x, foo = anno))
-#'
+#' 
 #' # Add legends for `foo`
-#' ht <- Heatmap(m, top_annotation = HeatmapAnnotation(bar = x, foo = anno))
-#' lgd <- Legend(title = "foo", at = names(graphics), graphics = graphics)
+#' ht = Heatmap(m, top_annotation = HeatmapAnnotation(bar = x, foo = anno))
+#' lgd = Legend(title = "foo", at = names(graphics), graphics = graphics)
 #' draw(ht, annotation_legend_list = list(lgd))
-#'
+#' 
+#' 
 anno_customize <- function(x, graphics = list(), which = c("column", "row"),
                            border = TRUE, width = NULL, height = NULL, verbose = TRUE) {
   if (is.null(.ENV$current_annotation_which)) {
@@ -5490,20 +5614,23 @@ anno_customize <- function(x, graphics = list(), which = c("column", "row"),
 # Heatmap(m, right_annotation = rowAnnotation(numeric = anno_numeric(x)))
 
 
+
+
+
+
+
+
 #' Numeric labels annotation
-#'
+#' 
 #' Numeric labels annotation
-#'
-#'
+#' 
+#' 
 #' @param x A vector of numeric values.
 #' @param rg Range. A numeric vector of length two.
 #' @param labels_gp Graphics parameters for labels.
 #' @param x_convert A function applied on \code{x}. E.g. when \code{x} contains
 #' p-values, to map \code{x} to the heights of bars, a transformation of
 #' \code{-log10(x)} is normally applied.
-#' @param labels_format A function applied on \code{x}. E.g., when \code{x} is
-#' a numeric, \code{labels_format} can be set to \code{function(x)
-#' sprintf("%.2f", x)}.
 #' @param labels_offset Offset of labels to the left or right of bars.
 #' @param bg_gp Graphics parameters for the background bars.
 #' @param bar_width Width of bars. Note it corresponds to the vertical
@@ -5517,11 +5644,13 @@ anno_customize <- function(x, graphics = list(), which = c("column", "row"),
 #' \code{pos = 0}.
 #' @param width Width of the annotation.
 #' @examples
-#'
-#' m <- matrix(rnorm(100), 10)
-#' x <- rnorm(10)
+#' 
+#' 
+#' m = matrix(rnorm(100), 10)
+#' x = rnorm(10)
 #' Heatmap(m, right_annotation = rowAnnotation(numeric = anno_numeric(x)))
-#'
+#' 
+#' 
 anno_numeric <- function(x, rg = range(x), labels_gp = gpar(), x_convert = NULL,
                          labels_format = NULL, labels_offset = unit(4, "pt"),
                          bg_gp = gpar(fill = "#8080FF", col = "#8080FF"),

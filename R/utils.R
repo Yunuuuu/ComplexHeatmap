@@ -163,30 +163,38 @@ default_col <- function(x, main_matrix = FALSE) {
 # })
 
 
+
+
+
+
+
+
 #' Calculate Pairwise Distance from a Matrix
-#'
+#' 
 #' Calculate Pairwise Distance from a Matrix
-#'
+#' 
 #' You can construct any type of distance measurements by defining a pair-wise
 #' distance function. The function is implemented by two nested \code{for}
 #' loops, so the efficiency may not be so good.
-#'
+#' 
 #' @param x A matrix or a list. If it is a matrix, the distance is calculated
 #' by rows.
 #' @param pairwise_fun A function which calculates distance between two
 #' vectors.
 #' @param ... Pass to \code{\link[stats:dist]{as.dist}}.
 #' @return A \code{\link[stats]{dist}} object.
-#' @author Zuguang Gu <z.gu@@dkfz.de>
+#' @author Zuguang Gu \href{mailto:z.gu@@dkfz.dez.gu@@dkfz.de}
 #' @examples
-#'
-#' lt <- lapply(1:10, function(i) {
-#'   sample(letters, sample(6:10, 1))
+#' 
+#' 
+#' lt = lapply(1:10, function(i) {
+#'     sample(letters, sample(6:10, 1))
 #' })
 #' dist2(lt, function(x, y) {
-#'   length(intersect(x, y)) / length(union(x, y))
+#'     length(intersect(x, y))/length(union(x, y))
 #' })
-#'
+#' 
+#' 
 dist2 <- function(x, pairwise_fun = function(x, y) sqrt(sum((x - y)^2)), ...) {
   if (is.matrix(x)) {
     if (nrow(x) < 2) {

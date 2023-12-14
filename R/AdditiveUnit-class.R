@@ -1,77 +1,100 @@
-# == title
-# Class for Concatenating Heatmaps and Annotations
-#
-# == detail
-# This class is a super class for `Heatmap-class`, `HeatmapList-class` and
-# `HeatmapAnnotation-class` classes. It is only designed for ``+`` generic
-# method and the ``\%v\%v`` method so that above three classes can be appended to each other.
-#
-
-
 #' Constructor Method for AdditiveUnit Class
-#'
+#' 
 #' Constructor Method for AdditiveUnit Class
-#'
+#' 
 #' This method is not used in the package.
-#'
+#' 
 #' @param ... Black hole arguments.
 #' @return No value is returned.
-#' @author Zuguang Gu <z.gu@@dkfz.de>
+#' @author Zuguang Gu \href{mailto:z.gu@@dkfz.dez.gu@@dkfz.de}
 #' @examples
-#'
+#' 
+#' 
 #' # There is no example
 #' NULL
-#'
-AdditiveUnit <- setClass("AdditiveUnit")
-
-# == title
-# Constructor Method for AdditiveUnit Class
-#
-# == param
-# -... Black hole arguments.
-#
-# == details
-# This method is not used in the package.
-#
-# == value
-# No value is returned.
-#
-# == author
-# Zuguang Gu <z.gu@dkfz.de>
-#
+#' 
+#' 
 AdditiveUnit <- function(...) {
-  new("AdditiveUnit", ...)
+  methods::new("AdditiveUnit", ...)
 }
 
+#' Class for Concatenating Heatmaps and Annotations
+#' 
+#' Class for Concatenating Heatmaps and Annotations
+#' 
+#' This class is a super class for \code{\link{Heatmap-class}},
+#' \code{\link{HeatmapList-class}} and \code{\link{HeatmapAnnotation-class}}
+#' classes. It is only designed for \code{+} generic method and the \code{%v%v}
+#' method so that above three classes can be appended to each other.
+#' 
+#' @examples
+#' 
+#' # There is no example
+#' NULL
+#' 
+#' 
+#' @export 
+#' @docType class
+#' @name AdditiveUnit-class
+methods::setClass("AdditiveUnit")
 
-# == title
-# Horizontally Add Heatmaps or Annotations to a Heatmap List
-#
-# == param
-# -x A `Heatmap-class` object, a `HeatmapAnnotation-class` object or a `HeatmapList-class` object.
-# -y A `Heatmap-class` object, a `HeatmapAnnotation-class` object or a `HeatmapList-class` object.
-#
-# == detail
-# It is only a helper function. It actually calls
-# `add_heatmap,Heatmap-method`, `add_heatmap,HeatmapList-method` or
-# `add_heatmap,HeatmapAnnotation-method` depending on the class of the input
-# objects.
-#
-# The `HeatmapAnnotation-class` object to be added should only be row
-# annotations. Column annotations should be added to the heatmap list by
-# `\%v\%`.
-#
-# ``x`` and ``y`` can also be ``NULL``.
-#
-# == value
-# A `HeatmapList-class` object.
-#
-# == seealso
-# `\%v\%` operator is used for vertical heatmap list.
-#
-# == author
-# Zuguang Gu <z.gu@dkfz.de>
-#
+#' Method dispatch page for add_heatmap
+#'
+#' Method dispatch page for \code{add_heatmap}.
+#'
+#'
+#' @section Dispatch: \code{add_heatmap} can be dispatched on following
+#' classes:
+#'
+#' \itemize{ \item \code{\link{add_heatmap,HeatmapAnnotation-method}},
+#' \code{\link{HeatmapAnnotation-class}} class method \item
+#' \code{\link{add_heatmap,Heatmap-method}}, \code{\link{Heatmap-class}} class
+#' method \item \code{\link{add_heatmap,HeatmapList-method}},
+#' \code{\link{HeatmapList-class}} class method }
+#' @examples
+#'
+#' # no example
+#' NULL
+#'
+#' @export 
+#' @name add_heatmap
+methods::setGeneric("add_heatmap", function(object, ...) {
+    standardGeneric("add_heatmap")
+})
+
+#' Horizontally Add Heatmaps or Annotations to a Heatmap List
+#' 
+#' Horizontally Add Heatmaps or Annotations to a Heatmap List
+#' 
+#' It is only a helper function. It actually calls
+#' \code{\link{add_heatmap,Heatmap-method}},
+#' \code{\link{add_heatmap,HeatmapList-method}} or
+#' \code{\link{add_heatmap,HeatmapAnnotation-method}} depending on the class of
+#' the input objects.
+#' 
+#' The \code{\link{HeatmapAnnotation-class}} object to be added should only be
+#' row annotations. Column annotations should be added to the heatmap list by
+#' \code{\link[=pct_v_pct]{%v%}}.
+#' 
+#' \code{x} and \code{y} can also be \code{NULL}.
+#' 
+#' @param x A \code{\link{Heatmap-class}} object, a
+#' \code{\link{HeatmapAnnotation-class}} object or a
+#' \code{\link{HeatmapList-class}} object.
+#' @param y A \code{\link{Heatmap-class}} object, a
+#' \code{\link{HeatmapAnnotation-class}} object or a
+#' \code{\link{HeatmapList-class}} object.
+#' @return A \code{\link{HeatmapList-class}} object.
+#' @author Zuguang Gu <z.gu@@dkfz.de>
+#' @seealso \code{\link[=pct_v_pct]{%v%}} operator is used for vertical heatmap
+#' list.
+#' @examples
+#' 
+#' # There is no example
+#' NULL
+#' 
+#' @export 
+#' @aliases add.AdditiveUnit +.AdditiveUnit
 "+.AdditiveUnit" <- function(x, y) {
   if (inherits(x, "HeatmapAnnotation")) {
     if (x@which != "row") {
@@ -96,34 +119,6 @@ AdditiveUnit <- function(...) {
   }
 }
 
-
-# == title
-# Vertically Add Heatmaps or Annotations to a Heatmap List
-#
-# == param
-# -x A `Heatmap-class` object, a `HeatmapAnnotation-class` object or a `HeatmapList-class` object.
-# -y A `Heatmap-class` object, a `HeatmapAnnotation-class` object or a `HeatmapList-class` object.
-#
-# == detail
-# It is only a helper function. It actually calls
-# `add_heatmap,Heatmap-method`, `add_heatmap,HeatmapList-method` or
-# `add_heatmap,HeatmapAnnotation-method` depending on the class of the input
-# objects.
-#
-# The `HeatmapAnnotation-class` object to be added should only be column
-# annotations.
-#
-# ``x`` and ``y`` can also be ``NULL``.
-#
-# == value
-# A `HeatmapList-class` object.
-#
-# == seealso
-# `+.AdditiveUnit` operator is used for horizontal heatmap list.
-#
-# == author
-# Zuguang Gu <z.gu@dkfz.de>
-#
 "%v%" <- function(x, y) {
   if (inherits(x, "HeatmapAnnotation")) {
     if (x@which != "column") {
