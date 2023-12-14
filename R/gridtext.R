@@ -119,37 +119,37 @@
 # if(requireNamespace("gridtext")) {
 # mat = matrix(rnorm(100), 10)
 # rownames(mat) = letters[1:10]
-# ht = Heatmap(mat, 
+# ht = Heatmap(mat,
 # 	column_title = gt_render("Some <span style='color:blue'>blue text **in bold.**</span><br>And *italics text.*<br>And some <span style='font-size:18pt; color:black'>large</span> text.", r = unit(2, "pt"), padding = unit(c(2, 2, 2, 2), "pt")),
 # 	column_title_gp = gpar(box_fill = "orange"),
 # 	row_labels = gt_render(letters[1:10], padding = unit(c(2, 10, 2, 10), "pt")),
 # 	row_names_gp = gpar(box_col = "red"),
-# 	row_km = 2, 
-# 	row_title = gt_render(c("title1", "title2")), 
+# 	row_km = 2,
+# 	row_title = gt_render(c("title1", "title2")),
 # 	row_title_gp = gpar(box_fill = "yellow"),
 # 	heatmap_legend_param = list(
-# 		title = gt_render("<span style='color:orange'>**Legend title**</span>"), 
+# 		title = gt_render("<span style='color:orange'>**Legend title**</span>"),
 # 		title_gp = gpar(box_fill = "grey"),
-# 		at = c(-3, 0, 3), 
+# 		at = c(-3, 0, 3),
 # 		labels = gt_render(c("*negative* three", "zero", "*positive* three"))
 # 	))
 # ht = rowAnnotation(
-# 	foo = anno_text(gt_render(sapply(LETTERS[1:10], strrep, 10), align_widths = TRUE), 
-# 	                gp = gpar(box_col = "blue", box_lwd = 2), 
-# 	                just = "right", 
+# 	foo = anno_text(gt_render(sapply(LETTERS[1:10], strrep, 10), align_widths = TRUE),
+# 	                gp = gpar(box_col = "blue", box_lwd = 2),
+# 	                just = "right",
 # 	                location = unit(1, "npc")
 # 	)) + ht
 # draw(ht)
 #
 # }
-gt_render = function(x, ...) {
-	if(!requireNamespace("gridtext")) {
-		stop_wrap("gridtext package needs to be installed.")
-	}
-	param = list(...)
-	class(x) = "gridtext"
-	attr(x, "param") = param
-	return(x)
+gt_render <- function(x, ...) {
+  if (!requireNamespace("gridtext")) {
+    stop_wrap("gridtext package needs to be installed.")
+  }
+  param <- list(...)
+  class(x) <- "gridtext"
+  attr(x, "param") <- param
+  return(x)
 }
 
 # == title
@@ -161,99 +161,99 @@ gt_render = function(x, ...) {
 #
 # == details
 # Internally used.
-"[.gridtext" = function(x, index) {
-	cl = class(x)
-	param = attr(x, "param")
-	class(x) = NULL
-	x = x[index]
-	class(x) = cl
-	attr(x, "param") = param
-	x
+"[.gridtext" <- function(x, index) {
+  cl <- class(x)
+  param <- attr(x, "param")
+  class(x) <- NULL
+  x <- x[index]
+  class(x) <- cl
+  attr(x, "param") <- param
+  x
 }
 
-grid.text = function(label, x = unit(0.5, "npc"), y = unit(0.5, "npc"), ...) {
-	if(inherits(label, "gridtext")) {
-		# cat("draw text by gridtext:\n")
-		# print(label)
-		# cat("\n")
-		grid.draw(richtext_grob2(label, x, y, ...))
-	} else {
-		grid::grid.text(label, x, y, ...)
-	}
+grid.text <- function(label, x = unit(0.5, "npc"), y = unit(0.5, "npc"), ...) {
+  if (inherits(label, "gridtext")) {
+    # cat("draw text by gridtext:\n")
+    # print(label)
+    # cat("\n")
+    grid.draw(richtext_grob2(label, x, y, ...))
+  } else {
+    grid::grid.text(label, x, y, ...)
+  }
 }
 
-textGrob = function(label, ...) {
-	if(inherits(label, "gridtext")) {
-		richtext_grob2(label, ...)
-	} else {
-		grid::textGrob(label, ...)
-	}
+textGrob <- function(label, ...) {
+  if (inherits(label, "gridtext")) {
+    richtext_grob2(label, ...)
+  } else {
+    grid::textGrob(label, ...)
+  }
 }
 
-normalize_just = function(x) {
-	if(is.character(x)) {
-		x[x == "centre"] = "center"
-		if(identical(x, "center")) {
-			return(c(0.5, 0.5))
-		} else if(identical(x, c("center", "center"))) {
-			return(c(0.5, 0.5))
-		} else if(identical(x, c("left", "center"))) {
-			return(c(0, 0.5))
-		} else if(identical(x, c("right", "center"))) {
-			return(c(1, 0.5))
-		} else if(identical(x, c("center", "top"))) {
-			return(c(0.5, 1))
-		} else if(identical(x, c("center", "bottom"))) {
-			return(c(0.5, 0))
-		} else if(identical(x, c("left", "bottom"))) {
-			return(c(0, 0))
-		} else if(identical(x, c("left", "top"))) {
-			return(c(0, 1))
-		} else if(identical(x, c("right", "bottom"))) {
-			return(c(1, 0))
-		} else if(identical(x, c("right", "top"))) {
-			return(c(1, 1))
-		} else if(identical(x, c("left"))) {
-			return(c(0, 0.5))
-		} else if(identical(x, c("right"))) {
-			return(c(1, 0.5))
-		} else if(identical(x, c("bottom"))) {
-			return(c(0.5, 0))
-		} else if(identical(x, c("top"))) {
-			return(c(0.5, 1))
-		}
-	}
-	if(length(x) == 1) x = c(x, x)
-	return(x)
+normalize_just <- function(x) {
+  if (is.character(x)) {
+    x[x == "centre"] <- "center"
+    if (identical(x, "center")) {
+      return(c(0.5, 0.5))
+    } else if (identical(x, c("center", "center"))) {
+      return(c(0.5, 0.5))
+    } else if (identical(x, c("left", "center"))) {
+      return(c(0, 0.5))
+    } else if (identical(x, c("right", "center"))) {
+      return(c(1, 0.5))
+    } else if (identical(x, c("center", "top"))) {
+      return(c(0.5, 1))
+    } else if (identical(x, c("center", "bottom"))) {
+      return(c(0.5, 0))
+    } else if (identical(x, c("left", "bottom"))) {
+      return(c(0, 0))
+    } else if (identical(x, c("left", "top"))) {
+      return(c(0, 1))
+    } else if (identical(x, c("right", "bottom"))) {
+      return(c(1, 0))
+    } else if (identical(x, c("right", "top"))) {
+      return(c(1, 1))
+    } else if (identical(x, c("left"))) {
+      return(c(0, 0.5))
+    } else if (identical(x, c("right"))) {
+      return(c(1, 0.5))
+    } else if (identical(x, c("bottom"))) {
+      return(c(0.5, 0))
+    } else if (identical(x, c("top"))) {
+      return(c(0.5, 1))
+    }
+  }
+  if (length(x) == 1) x <- c(x, x)
+  return(x)
 }
 
 # argument from grid.text directly pass to richtext_grob, so some argument need
 # to be adjusted, e.g. those not supported in richtext_grob
-richtext_grob2 = function(label, ...) {
-	param0 = attr(label, "param")
-	param = list(text = label, ...)
-	for(nm in names(param0)) {
-		param[[nm]] = param0[[nm]]
-	}
-	if("just" %in% names(param)) {
-		j = normalize_just(param$just)
-		param$just = NULL
-		param$hjust = j[1]
-		param$vjust = j[2]
-	}
-	if("gp" %in% names(param)) {
-		gp = param$gp
-		l_box = grepl("^box_", names(gp))
-		if(any(l_box)) {
-			class(gp) = "list"
-			box_gp = gp[l_box]
-			gp[l_box] = NULL
-			names(box_gp) = gsub("^box_", "", names(box_gp))
-			class(gp) = "gpar"
-			class(box_gp) = "gpar"
-			param$gp = gp
-			param$box_gp = box_gp
-		}
-	}
-	do.call(gridtext::richtext_grob, param)
+richtext_grob2 <- function(label, ...) {
+  param0 <- attr(label, "param")
+  param <- list(text = label, ...)
+  for (nm in names(param0)) {
+    param[[nm]] <- param0[[nm]]
+  }
+  if ("just" %in% names(param)) {
+    j <- normalize_just(param$just)
+    param$just <- NULL
+    param$hjust <- j[1]
+    param$vjust <- j[2]
+  }
+  if ("gp" %in% names(param)) {
+    gp <- param$gp
+    l_box <- grepl("^box_", names(gp))
+    if (any(l_box)) {
+      class(gp) <- "list"
+      box_gp <- gp[l_box]
+      gp[l_box] <- NULL
+      names(box_gp) <- gsub("^box_", "", names(box_gp))
+      class(gp) <- "gpar"
+      class(box_gp) <- "gpar"
+      param$gp <- gp
+      param$box_gp <- box_gp
+    }
+  }
+  do.call(gridtext::richtext_grob, param)
 }

@@ -1,26 +1,25 @@
-
-width = function (x, ...) {
-	UseMethod("width", x)
+width <- function(x, ...) {
+  UseMethod("width", x)
 }
 
-height = function (x, ...) {
-	UseMethod("height", x)
+height <- function(x, ...) {
+  UseMethod("height", x)
 }
 
-size = function (x, ...) {
-	UseMethod("size", x)
+size <- function(x, ...) {
+  UseMethod("size", x)
 }
 
-"width<-" = function (x, ..., value) {
-	UseMethod("width<-", x)
+"width<-" <- function(x, ..., value) {
+  UseMethod("width<-", x)
 }
 
-"height<-" = function (x, ..., value) {
-	UseMethod("height<-", x)
+"height<-" <- function(x, ..., value) {
+  UseMethod("height<-", x)
 }
 
-"size<-" = function (x, ..., value) {
-	UseMethod("size<-", x)
+"size<-" <- function(x, ..., value) {
+  UseMethod("size<-", x)
 }
 
 # == title
@@ -38,8 +37,8 @@ size = function (x, ...) {
 # ComplexHeatmap:::width(anno)
 # anno = anno_points(1:10, which = "row")
 # ComplexHeatmap:::width(anno)
-width.AnnotationFunction = function(x, ...) {
-	x@width
+width.AnnotationFunction <- function(x, ...) {
+  x@width
 }
 
 # == title
@@ -53,9 +52,9 @@ width.AnnotationFunction = function(x, ...) {
 # == detail
 # Internally used.
 #
-"width<-.AnnotationFunction" = function(x, ..., value) {
-	x@width = value
-	x
+"width<-.AnnotationFunction" <- function(x, ..., value) {
+  x@width <- value
+  x
 }
 
 # == title
@@ -73,8 +72,8 @@ width.AnnotationFunction = function(x, ...) {
 # ComplexHeatmap:::height(anno)
 # anno = anno_points(1:10, which = "row")
 # ComplexHeatmap:::height(anno)
-height.AnnotationFunction = function(x, ...) {
-	x@height
+height.AnnotationFunction <- function(x, ...) {
+  x@height
 }
 
 # == title
@@ -88,9 +87,9 @@ height.AnnotationFunction = function(x, ...) {
 # == detail
 # Internally used.
 #
-"height<-.AnnotationFunction" = function(x, ..., value) {
-	x@height = value
-	x
+"height<-.AnnotationFunction" <- function(x, ..., value) {
+  x@height <- value
+  x
 }
 
 # == title
@@ -110,12 +109,12 @@ height.AnnotationFunction = function(x, ...) {
 # ComplexHeatmap:::size(anno)
 # anno = anno_points(1:10, which = "row")
 # ComplexHeatmap:::size(anno)
-size.AnnotationFunction = function(x, ...) {
-	if(x@which == "row") {
-		x@width
-	} else {
-		x@height
-	}
+size.AnnotationFunction <- function(x, ...) {
+  if (x@which == "row") {
+    x@width
+  } else {
+    x@height
+  }
 }
 
 # == title
@@ -135,13 +134,13 @@ size.AnnotationFunction = function(x, ...) {
 # anno = anno_points(1:10)
 # ComplexHeatmap:::size(anno) = unit(4, "cm")
 # ComplexHeatmap:::size(anno)
-"size<-.AnnotationFunction" = function(x, ..., value) {
-	if(x@which == "row") {
-		x@width = value
-	} else {
-		x@height = value
-	}
-	x
+"size<-.AnnotationFunction" <- function(x, ..., value) {
+  if (x@which == "row") {
+    x@width <- value
+  } else {
+    x@height <- value
+  }
+  x
 }
 
 
@@ -156,8 +155,8 @@ size.AnnotationFunction = function(x, ...) {
 # == detail
 # Internally used.
 #
-width.SingleAnnotation = function(x, ...) {
-    x@width
+width.SingleAnnotation <- function(x, ...) {
+  x@width
 }
 
 # == title
@@ -171,12 +170,12 @@ width.SingleAnnotation = function(x, ...) {
 # == detail
 # Internally used.
 #
-"width<-.SingleAnnotation" = function(x, ..., value) {
-    x@width = value
-    if(inherits(x@fun, "AnnotationFunction")) {
-        width(x@fun) = value
-    }
-    x
+"width<-.SingleAnnotation" <- function(x, ..., value) {
+  x@width <- value
+  if (inherits(x@fun, "AnnotationFunction")) {
+    width(x@fun) <- value
+  }
+  x
 }
 
 # == title
@@ -189,8 +188,8 @@ width.SingleAnnotation = function(x, ...) {
 # == detail
 # Internally used.
 #
-height.SingleAnnotation = function(x, ...) {
-    x@height
+height.SingleAnnotation <- function(x, ...) {
+  x@height
 }
 
 # == title
@@ -204,12 +203,12 @@ height.SingleAnnotation = function(x, ...) {
 # == detail
 # Internally used.
 #
-"height<-.SingleAnnotation" = function(x, ..., value) {
-    x@height = value
-    if(inherits(x@fun, "AnnotationFunction")) {
-        height(x@fun) = value
-    }
-    x
+"height<-.SingleAnnotation" <- function(x, ..., value) {
+  x@height <- value
+  if (inherits(x@fun, "AnnotationFunction")) {
+    height(x@fun) <- value
+  }
+  x
 }
 
 # == title
@@ -224,12 +223,12 @@ height.SingleAnnotation = function(x, ...) {
 #
 # Internally used.
 #
-size.SingleAnnotation = function(x, ...) {
-    if(x@which == "row") {
-        x@width
-    } else {
-        x@height
-    }
+size.SingleAnnotation <- function(x, ...) {
+  if (x@which == "row") {
+    x@width
+  } else {
+    x@height
+  }
 }
 
 # == title
@@ -245,13 +244,13 @@ size.SingleAnnotation = function(x, ...) {
 #
 # Internally used.
 #
-"size<-.SingleAnnotation" = function(x, ..., value) {
-    if(x@which == "row") {
-        width(x) = value
-    } else {
-        height(x) = value
-    }
-    x
+"size<-.SingleAnnotation" <- function(x, ..., value) {
+  if (x@which == "row") {
+    width(x) <- value
+  } else {
+    height(x) <- value
+  }
+  x
 }
 
 
@@ -266,8 +265,8 @@ size.SingleAnnotation = function(x, ...) {
 # == detail
 # Internally used.
 #
-width.HeatmapAnnotation = function(x, ...) {
-    x@width
+width.HeatmapAnnotation <- function(x, ...) {
+  x@width
 }
 
 # == title
@@ -281,17 +280,16 @@ width.HeatmapAnnotation = function(x, ...) {
 # == detail
 # Internally used.
 #
-"width<-.HeatmapAnnotation" = function(x, ..., value) {
-
-    if(x@which == "column") {
-    	x@width = value
-    	for(i in seq_along(x@anno_list)) {
-    		width(x@anno_list[[i]]) = value
-    	}
-    } else {
-    	x = re_size(x, width = value)
+"width<-.HeatmapAnnotation" <- function(x, ..., value) {
+  if (x@which == "column") {
+    x@width <- value
+    for (i in seq_along(x@anno_list)) {
+      width(x@anno_list[[i]]) <- value
     }
-    x
+  } else {
+    x <- re_size(x, width = value)
+  }
+  x
 }
 
 
@@ -305,8 +303,8 @@ width.HeatmapAnnotation = function(x, ...) {
 # == detail
 # Internally used.
 #
-height.HeatmapAnnotation = function(x, ...) {
-    x@height
+height.HeatmapAnnotation <- function(x, ...) {
+  x@height
 }
 
 # == title
@@ -320,17 +318,16 @@ height.HeatmapAnnotation = function(x, ...) {
 # == detail
 # Internally used.
 #
-"height<-.HeatmapAnnotation" = function(x, ..., value) {
-
-    if(x@which == "row") {
-    	x@height = value
-    	for(i in seq_along(x@anno_list)) {
-    		height(x@anno_list[[i]]) = height
-    	}
-    } else {
-    	x = re_size(x, height = value)
+"height<-.HeatmapAnnotation" <- function(x, ..., value) {
+  if (x@which == "row") {
+    x@height <- value
+    for (i in seq_along(x@anno_list)) {
+      height(x@anno_list[[i]]) <- height
     }
-    x
+  } else {
+    x <- re_size(x, height = value)
+  }
+  x
 }
 
 # == title
@@ -345,12 +342,12 @@ height.HeatmapAnnotation = function(x, ...) {
 #
 # Internally used.
 #
-size.HeatmapAnnotation = function(x, ...) {
-    if(x@which == "row") {
-        x@width
-    } else {
-        x@height
-    }
+size.HeatmapAnnotation <- function(x, ...) {
+  if (x@which == "row") {
+    x@width
+  } else {
+    x@height
+  }
 }
 
 # == title
@@ -366,13 +363,13 @@ size.HeatmapAnnotation = function(x, ...) {
 #
 # Internally used.
 #
-"size<-.HeatmapAnnotation" = function(x, ..., value) {
-    if(x@which == "row") {
-        width(x) = value
-    } else {
-        height(x) = value
-    }
-    x
+"size<-.HeatmapAnnotation" <- function(x, ..., value) {
+  if (x@which == "row") {
+    width(x) <- value
+  } else {
+    height(x) <- value
+  }
+  x
 }
 
 
@@ -390,9 +387,9 @@ size.HeatmapAnnotation = function(x, ...) {
 # lgd = Legend(labels = 1:10, title = "foo", legend_gp = gpar(fill = "red"))
 # ComplexHeatmap:::width(lgd)
 #
-width.Legends = function(x, ...) {
-	s = attr(x@grob, "width")
-	convertWidth(s, "mm")
+width.Legends <- function(x, ...) {
+  s <- attr(x@grob, "width")
+  convertWidth(s, "mm")
 }
 
 
@@ -410,9 +407,9 @@ width.Legends = function(x, ...) {
 # lgd = Legend(labels = 1:10, title = "foo", legend_gp = gpar(fill = "red"))
 # ComplexHeatmap:::height(lgd)
 #
-height.Legends = function(x, ...) {
-	s = attr(x@grob, "height")
-	convertHeight(s, "mm")
+height.Legends <- function(x, ...) {
+  s <- attr(x@grob, "height")
+  convertHeight(s, "mm")
 }
 
 
@@ -423,12 +420,12 @@ height.Legends = function(x, ...) {
 # -x The `HeatmapList-class` object returned by `draw,HeatmapList-method`.
 # -... Other arguments.
 #
-width.HeatmapList = function(x, ...) {
-    if(x@layout$initialized) {
-        x@ht_list_param$width
-    } else {
-        stop_wrap("width() can only be applied to the heatmap list object returned by draw().")
-    }
+width.HeatmapList <- function(x, ...) {
+  if (x@layout$initialized) {
+    x@ht_list_param$width
+  } else {
+    stop_wrap("width() can only be applied to the heatmap list object returned by draw().")
+  }
 }
 
 
@@ -439,12 +436,12 @@ width.HeatmapList = function(x, ...) {
 # -x The `HeatmapList-class` object returned by `draw,HeatmapList-method`.
 # -... Other arguments.
 #
-height.HeatmapList = function(x, ...) {
-    if(x@layout$initialized) {
-        x@ht_list_param$height
-    } else {
-        stop_wrap("height() can only be applied to the heatmap list object returned by draw().")
-    }
+height.HeatmapList <- function(x, ...) {
+  if (x@layout$initialized) {
+    x@ht_list_param$height
+  } else {
+    stop_wrap("height() can only be applied to the heatmap list object returned by draw().")
+  }
 }
 
 
@@ -455,8 +452,8 @@ height.HeatmapList = function(x, ...) {
 # -x The `HeatmapList-class` object returned by `draw,Heatmap-method`.
 # -... Other arguments.
 #
-width.Heatmap = function(x, ...) {
-    stop_wrap("width() can only be applied to the heatmap object returned by draw().")
+width.Heatmap <- function(x, ...) {
+  stop_wrap("width() can only be applied to the heatmap object returned by draw().")
 }
 
 
@@ -467,7 +464,6 @@ width.Heatmap = function(x, ...) {
 # -x The `HeatmapList-class` object returned by `draw,Heatmap-method`.
 # -... Other arguments.
 #
-height.Heatmap = function(x, ...) {
-    stop_wrap("height() can only be applied to the heatmap object returned by draw().")
+height.Heatmap <- function(x, ...) {
+  stop_wrap("height() can only be applied to the heatmap object returned by draw().")
 }
-

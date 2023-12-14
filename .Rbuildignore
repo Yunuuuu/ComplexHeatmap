@@ -14,3 +14,6 @@ revdep/
 build_pkg_site.R
 ^\.github$
 logo.R
+^\.radian_history$
+^Scratch\.RConsole$
+^README\.html$

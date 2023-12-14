@@ -13,3 +13,5 @@
 .DS_Store
 
 revdep/
+.radian_history
+Scratch.RConsole

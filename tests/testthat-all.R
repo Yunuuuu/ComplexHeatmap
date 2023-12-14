@@ -1,5 +1,3 @@
-
-
 suppressWarnings(suppressPackageStartupMessages(library(ComplexHeatmap)))
 library(testthat)
 

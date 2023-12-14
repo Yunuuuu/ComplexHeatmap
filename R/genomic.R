@@ -1,4 +1,4 @@
-GHEATMAP_ENV = new.env()
+GHEATMAP_ENV <- new.env()
 
 # == title
 # Bin the genome
@@ -12,22 +12,43 @@ GHEATMAP_ENV = new.env()
 # == value
 # A `GenomicRanges::GRanges` object of the genomic bins.
 #
-bin_genome = function(species = "hg19", bins = 2000, bin_size = NULL, ...) {
 
-    lt = circlize::read.chromInfo(species = species, ...)
 
-    chr_df = lt$df
-    chr_gr = GenomicRanges::GRanges(seqnames = chr_df[, 1], ranges = IRanges::IRanges(chr_df[, 2] + 1, chr_df[, 3]))
+#' Bin the genome
+#'
+#' Bin the genome
+#'
+#'
+#' @param species Abbreviation of the genome, pass to
+#' \code{\link[circlize]{read.chromInfo}}.
+#' @param bins Number of bins. The final number of bins is approximately equal
+#' to it.
+#' @param bin_size Size of the bins. If \code{bin_size} is set, \code{bins} is
+#' ignored.
+#' @param ... All pass to \code{\link[circlize]{read.chromInfo}}. E.g. you can
+#' set a subset of chromosomes there.
+#' @return A \code{\link[GenomicRanges:GRanges-class]{GRanges}} object of the
+#' genomic bins.
+#' @examples
+#'
+#' # There is no example
+#' NULL
+#'
+bin_genome <- function(species = "hg19", bins = 2000, bin_size = NULL, ...) {
+  lt <- circlize::read.chromInfo(species = species, ...)
 
-    if(is.null(bin_size)) {
-        bin_size = round(sum(lt$chr.len)/bins)
-        bin_size = max(bin_size, 1)
-    }
-    chr_window = EnrichedHeatmap::makeWindows(chr_gr, w = bin_size)
-    GenomicRanges::mcols(chr_window) = NULL
+  chr_df <- lt$df
+  chr_gr <- GenomicRanges::GRanges(seqnames = chr_df[, 1], ranges = IRanges::IRanges(chr_df[, 2] + 1, chr_df[, 3]))
 
-    GHEATMAP_ENV$chr_window = chr_window
-    invisible(chr_window)
+  if (is.null(bin_size)) {
+    bin_size <- round(sum(lt$chr.len) / bins)
+    bin_size <- max(bin_size, 1)
+  }
+  chr_window <- EnrichedHeatmap::makeWindows(chr_gr, w = bin_size)
+  GenomicRanges::mcols(chr_window) <- NULL
+
+  GHEATMAP_ENV$chr_window <- chr_window
+  invisible(chr_window)
 }
 
 # == title
@@ -73,7 +94,7 @@ bin_genome = function(species = "hg19", bins = 2000, bin_size = NULL, ...) {
 #
 # #### the second is a character matrix ######
 # bed_list = lapply(1:10, function(i) {
-#     generateRandomBed(nr = 1000, nc = 1, 
+#     generateRandomBed(nr = 1000, nc = 1,
 #         fun = function(n) sample(c("gain", "loss"), n, replace = TRUE))
 # })
 # char_mat = NULL
@@ -119,9 +140,9 @@ bin_genome = function(species = "hg19", bins = 2000, bin_size = NULL, ...) {
 # Heatmap(char_mat, name = "CNV", col = c("gain" = "red", "loss" = "blue"),
 #     border = TRUE, column_title = "character matrix") +
 # rowAnnotation(label = anno_mark(at = at, labels = labels)) +
-# rowAnnotation(pt = anno_points(v, gp = gpar(col = 4:5), pch = c(1, 16)), 
+# rowAnnotation(pt = anno_points(v, gp = gpar(col = 4:5), pch = c(1, 16)),
 #     width = unit(2, "cm")) +
-# rowAnnotation(bar = anno_barplot(v[, 1], gp = gpar(col = ifelse(v[ ,1] > 0, 2, 3))), 
+# rowAnnotation(bar = anno_barplot(v[, 1], gp = gpar(col = ifelse(v[ ,1] > 0, 2, 3))),
 #     width = unit(2, "cm"))
 # draw(ht_list, merge_legend = TRUE)
 #
@@ -143,131 +164,128 @@ bin_genome = function(species = "hg19", bins = 2000, bin_size = NULL, ...) {
 # HeatmapAnnotation(label = anno_mark(at = at, labels = labels, side = "bottom")) \%v\%
 # HeatmapAnnotation(pt = anno_points(v, gp = gpar(col = 4:5), pch = c(1, 16)),
 #     annotation_name_side = "left", height = unit(2, "cm")) \%v\%
-# HeatmapAnnotation(bar = anno_barplot(v[, 1], gp = gpar(col = ifelse(v[ ,1] > 0, 2, 3))), 
+# HeatmapAnnotation(bar = anno_barplot(v[, 1], gp = gpar(col = ifelse(v[ ,1] > 0, 2, 3))),
 #     annotation_name_side = "left", height = unit(2, "cm"))
 # draw(ht_list, heatmap_legend_side = "bottom", merge_legend = TRUE)
 # }
-normalize_genomic_signals_to_bins = function(gr, value, value_column = NULL, method = "weighted", 
+normalize_genomic_signals_to_bins <- function(
+    gr, value, value_column = NULL, method = "weighted",
     empty_value = NA, window = GHEATMAP_ENV$chr_window) {
-    
-    if(is.null(window)) {
-        stop_wrap("`bin_genome()` should be executed first.")
-    }
+  if (is.null(window)) {
+    stop_wrap("`bin_genome()` should be executed first.")
+  }
 
-    nm = paste0(as.vector(GenomicRanges::seqnames(window)), ":", GenomicRanges::start(window), "-", GenomicRanges::end(window))
+  nm <- paste0(as.vector(GenomicRanges::seqnames(window)), ":", GenomicRanges::start(window), "-", GenomicRanges::end(window))
 
 
-    if(!inherits(gr, "GRanges")) {
-        if(is.data.frame(gr)) {
-            oe = try({
-                gr <- GenomicRanges::GRanges(GenomicRanges::seqnames(gr[, 1]), ranges = IRanges::IRanges(gr[, 2], gr[, 3]))
-                if(ncol(gr) > 3) {
-                    GenomicRanges::mcols(gr) = gr[, -(1:3), drop = FALSE]
-                }
-            })
-            if(inherits(oe, "try-error")) {
-                stop_wrap("Failed to convert `gr` to a `GRanges` object. Please provide `gr` as a `GRanges` object.")
-            }
-        } else {
-            stop_wrap("`gr` must be a `GRanges` object.")
+  if (!inherits(gr, "GRanges")) {
+    if (is.data.frame(gr)) {
+      oe <- try({
+        gr <- GenomicRanges::GRanges(GenomicRanges::seqnames(gr[, 1]), ranges = IRanges::IRanges(gr[, 2], gr[, 3]))
+        if (ncol(gr) > 3) {
+          GenomicRanges::mcols(gr) <- gr[, -(1:3), drop = FALSE]
         }
-    }
-
-    if(missing(value) && is.null(value_column)) {
-        mtch = as.matrix(GenomicRanges::findOverlaps(window, gr))
-        u = matrix(FALSE, nrow = length(window), ncol = 1)
-        rownames(u) = nm
-        u[mtch[, 1], 1] = TRUE
-        return(u)
-    }
-
-    if(is.null(value) && is.null(value_column)) {
-        mtch = as.matrix(GenomicRanges::findOverlaps(window, gr))
-        u = matrix(FALSE, nrow = length(window), ncol = 1)
-        rownames(u) = nm
-        u[mtch[, 1], 1] = TRUE
-        return(u)
-    }
-
-    if(!is.null(value_column)) {
-        value = GenomicRanges::mcols(gr)[, value_column]
-        value = as.matrix(as.data.frame(value))
-    }
-
-    if(is.atomic(value) && is.vector(value)) value = cbind(value)
-
-    value = as.matrix(value)
-    if(is.character(value) && ncol(value) > 1) {
-        stop("For character signals, `value` can only be a single character vector or `value_column` can only contain one column.")
-    }
-
-    if(length(empty_value) == 1) {
-        empty_value = rep(empty_value, ncol(value))
-    }
-
-    u = matrix(rep(empty_value, each = length(window)), nrow = length(window), ncol = ncol(value))
-    rownames(u) = nm
-
-    mtch = as.matrix(GenomicRanges::findOverlaps(window, gr))
-    intersect = GenomicRanges::pintersect(window[mtch[,1]], gr[mtch[,2]])
-    w = GenomicRanges::width(intersect)
-    value = value[mtch[,2], , drop = FALSE]
-    n = nrow(value)
-
-    ind_list = split(seq_len(n), mtch[, 1])
-    window_index = as.numeric(names(ind_list))
-    window_w = GenomicRanges::width(window)
-
-    if(is.character(value)) {
-        for(i in seq_along(ind_list)) {
-            ind = ind_list[[i]]
-            if(is.function(method)) {
-                u[window_index[i], ] = method(value[ind], w[ind], window_w[i])
-            } else {
-                tb = tapply(w[ind], value[ind], sum)
-                u[window_index[i], ] = names(tb[which.max(tb)])
-            }
-        }
+      })
+      if (inherits(oe, "try-error")) {
+        stop_wrap("Failed to convert `gr` to a `GRanges` object. Please provide `gr` as a `GRanges` object.")
+      }
     } else {
-        if(method == "w0") {
-            gr2 = GenomicRanges::reduce(gr, min.gapwidth = 0)
-            mtch2 = as.matrix(GenomicRanges::findOverlaps(window, gr2))
-            intersect2 = GenomicRanges::pintersect(window[mtch2[, 1]], gr2[mtch2[, 2]])
-
-            width_intersect = tapply(GenomicRanges::width(intersect2), mtch2[, 1], sum)
-            ind = unique(mtch2[, 1])
-            width_setdiff = GenomicRanges::width(window[ind]) - width_intersect
-
-            w2 = GenomicRanges::width(window[ind])
-
-            for(i in seq_along(ind_list)) {
-                ind = ind_list[[i]]
-                x = colSums(value[ind, , drop = FALSE]*w[ind])/sum(w[ind])
-                u[window_index[i], ] = (x*width_intersect[i] + empty_value*width_setdiff[i])/w2[i]
-            }
-
-        } else if(method == "absolute") {
-            for(i in seq_along(ind_list)) {
-                u[window_index[i], ] = colMeans(value[ind_list[[i]], , drop = FALSE])
-            }
-            
-        } else if(method == "weighted") {
-            for(i in seq_along(ind_list)) {
-                ind = ind_list[[i]]
-                u[window_index[i], ] = colSums(value[ind, , drop = FALSE]*w[ind])/sum(w[ind])
-            }
-        } else {
-            if(is.function(method)) {
-                for(i in seq_along(ind_list)) {
-                    ind = ind_list[[i]]
-                    u[window_index[i], ] = method(value[ind], w[ind], window_w[i])
-                }
-            } else {
-                stop_wrap("Wrong method.")
-            }
-        }
+      stop_wrap("`gr` must be a `GRanges` object.")
     }
+  }
 
+  if (missing(value) && is.null(value_column)) {
+    mtch <- as.matrix(GenomicRanges::findOverlaps(window, gr))
+    u <- matrix(FALSE, nrow = length(window), ncol = 1)
+    rownames(u) <- nm
+    u[mtch[, 1], 1] <- TRUE
     return(u)
-}
+  }
 
+  if (is.null(value) && is.null(value_column)) {
+    mtch <- as.matrix(GenomicRanges::findOverlaps(window, gr))
+    u <- matrix(FALSE, nrow = length(window), ncol = 1)
+    rownames(u) <- nm
+    u[mtch[, 1], 1] <- TRUE
+    return(u)
+  }
+
+  if (!is.null(value_column)) {
+    value <- GenomicRanges::mcols(gr)[, value_column]
+    value <- as.matrix(as.data.frame(value))
+  }
+
+  if (is.atomic(value) && is.vector(value)) value <- cbind(value)
+
+  value <- as.matrix(value)
+  if (is.character(value) && ncol(value) > 1) {
+    stop("For character signals, `value` can only be a single character vector or `value_column` can only contain one column.")
+  }
+
+  if (length(empty_value) == 1) {
+    empty_value <- rep(empty_value, ncol(value))
+  }
+
+  u <- matrix(rep(empty_value, each = length(window)), nrow = length(window), ncol = ncol(value))
+  rownames(u) <- nm
+
+  mtch <- as.matrix(GenomicRanges::findOverlaps(window, gr))
+  intersect <- GenomicRanges::pintersect(window[mtch[, 1]], gr[mtch[, 2]])
+  w <- GenomicRanges::width(intersect)
+  value <- value[mtch[, 2], , drop = FALSE]
+  n <- nrow(value)
+
+  ind_list <- split(seq_len(n), mtch[, 1])
+  window_index <- as.numeric(names(ind_list))
+  window_w <- GenomicRanges::width(window)
+
+  if (is.character(value)) {
+    for (i in seq_along(ind_list)) {
+      ind <- ind_list[[i]]
+      if (is.function(method)) {
+        u[window_index[i], ] <- method(value[ind], w[ind], window_w[i])
+      } else {
+        tb <- tapply(w[ind], value[ind], sum)
+        u[window_index[i], ] <- names(tb[which.max(tb)])
+      }
+    }
+  } else {
+    if (method == "w0") {
+      gr2 <- GenomicRanges::reduce(gr, min.gapwidth = 0)
+      mtch2 <- as.matrix(GenomicRanges::findOverlaps(window, gr2))
+      intersect2 <- GenomicRanges::pintersect(window[mtch2[, 1]], gr2[mtch2[, 2]])
+
+      width_intersect <- tapply(GenomicRanges::width(intersect2), mtch2[, 1], sum)
+      ind <- unique(mtch2[, 1])
+      width_setdiff <- GenomicRanges::width(window[ind]) - width_intersect
+
+      w2 <- GenomicRanges::width(window[ind])
+
+      for (i in seq_along(ind_list)) {
+        ind <- ind_list[[i]]
+        x <- colSums(value[ind, , drop = FALSE] * w[ind]) / sum(w[ind])
+        u[window_index[i], ] <- (x * width_intersect[i] + empty_value * width_setdiff[i]) / w2[i]
+      }
+    } else if (method == "absolute") {
+      for (i in seq_along(ind_list)) {
+        u[window_index[i], ] <- colMeans(value[ind_list[[i]], , drop = FALSE])
+      }
+    } else if (method == "weighted") {
+      for (i in seq_along(ind_list)) {
+        ind <- ind_list[[i]]
+        u[window_index[i], ] <- colSums(value[ind, , drop = FALSE] * w[ind]) / sum(w[ind])
+      }
+    } else {
+      if (is.function(method)) {
+        for (i in seq_along(ind_list)) {
+          ind <- ind_list[[i]]
+          u[window_index[i], ] <- method(value[ind], w[ind], window_w[i])
+        }
+      } else {
+        stop_wrap("Wrong method.")
+      }
+    }
+  }
+
+  return(u)
+}

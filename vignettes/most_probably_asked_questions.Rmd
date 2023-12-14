@@ -7,7 +7,7 @@
 
 ```{r, echo = FALSE, message = FALSE}
 library(markdown)
-options(markdown.HTML.options = c(options('markdown.HTML.options')[[1]], "toc"))
+options(markdown.HTML.options = c(options("markdown.HTML.options")[[1]], "toc"))
 ```
 
 
@@ -99,7 +99,7 @@ the heatmap and later draw the whole plot as a single graphic element by
 `grid.draw()`.
 
 ```{r, eval = FALSE}
-ht_grob = grid.grabExpr(draw(ht, ...))
+ht_grob <- grid.grabExpr(draw(ht, ...))
 
 pushViewport(viewport(layout = grid.layout(...)))
 pushViewport(viewport(layout.pos.row = ..., layout.pos.col = ...))
@@ -114,11 +114,13 @@ You can first group your rows into several groups and make a group-level
 dendrogram on it. See following example:
 
 ```{r}
-m = matrix(rnorm(1000*10), nr = 1000)
-hc = hclust(dist(m))
-group = cutree(hc, k = 6)
-Heatmap(m, cluster_rows = cluster_within_group(t(m), group), 
-	row_split = 6, border = TRUE) # it would be better if also set row_split
+m <- matrix(rnorm(1000 * 10), nr = 1000)
+hc <- hclust(dist(m))
+group <- cutree(hc, k = 6)
+Heatmap(m,
+  cluster_rows = cluster_within_group(t(m), group),
+  row_split = 6, border = TRUE
+) # it would be better if also set row_split
 ```
 
 ### I have a matrix with huge nunmber of rows or columns, what is the efficient way to visualize it?
@@ -134,20 +136,21 @@ You need to use `decorate_row_dend()` or `decorate_column_dend()` to manually
 add the axes. See following examples:
 
 ```{r}
-m = matrix(rnorm(100), 10)
+m <- matrix(rnorm(100), 10)
 
-ht = Heatmap(m, name = "foo", 
-	row_dend_width = unit(4, "cm"),
-	column_dend_height = unit(4, "cm")
+ht <- Heatmap(m,
+  name = "foo",
+  row_dend_width = unit(4, "cm"),
+  column_dend_height = unit(4, "cm")
 )
 draw(ht, padding = unit(c(15, 2, 2, 2), "mm"))
 decorate_column_dend("foo", {
-	grid.yaxis()
+  grid.yaxis()
 })
 decorate_row_dend("foo", {
-	vp = current.viewport()
-	xscale = vp$xscale
-	grid.xaxis(at = xscale[2] - 0:5, label = 0:5)
+  vp <- current.viewport()
+  xscale <- vp$xscale
+  grid.xaxis(at = xscale[2] - 0:5, label = 0:5)
 })
 ```
 
@@ -172,13 +175,16 @@ different results for different runs. To solve this problem, you do either way a
 You need to assign the dendrograms to a zero-row/column matrix:
 
 ```{r}
-hc = hclust(dist(matrix(rnorm(100), 10)))
-Heatmap(matrix(nc = 0, nr = 10), cluster_rows = hc, 
-	right_annotation = rowAnnotation(
-		foo = anno_points(1:10),
-		sth = 1:10,
-		bar = anno_barplot(1:10)),
-	row_split = 2)
+hc <- hclust(dist(matrix(rnorm(100), 10)))
+Heatmap(matrix(nc = 0, nr = 10),
+  cluster_rows = hc,
+  right_annotation = rowAnnotation(
+    foo = anno_points(1:10),
+    sth = 1:10,
+    bar = anno_barplot(1:10)
+  ),
+  row_split = 2
+)
 ```
 
 ### I still have a problem with the package and I am lost in the ocean of the huge vignette.

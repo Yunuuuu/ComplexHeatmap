@@ -1,13 +1,28 @@
-
 # == title
 # Class for Concatenating Heatmaps and Annotations
 #
-# == detail 
+# == detail
 # This class is a super class for `Heatmap-class`, `HeatmapList-class` and
 # `HeatmapAnnotation-class` classes. It is only designed for ``+`` generic
 # method and the ``\%v\%v`` method so that above three classes can be appended to each other.
 #
-AdditiveUnit = setClass("AdditiveUnit")
+
+
+#' Constructor Method for AdditiveUnit Class
+#'
+#' Constructor Method for AdditiveUnit Class
+#'
+#' This method is not used in the package.
+#'
+#' @param ... Black hole arguments.
+#' @return No value is returned.
+#' @author Zuguang Gu <z.gu@@dkfz.de>
+#' @examples
+#'
+#' # There is no example
+#' NULL
+#'
+AdditiveUnit <- setClass("AdditiveUnit")
 
 # == title
 # Constructor Method for AdditiveUnit Class
@@ -24,8 +39,8 @@ AdditiveUnit = setClass("AdditiveUnit")
 # == author
 # Zuguang Gu <z.gu@dkfz.de>
 #
-AdditiveUnit = function(...) {
-    new("AdditiveUnit", ...)
+AdditiveUnit <- function(...) {
+  new("AdditiveUnit", ...)
 }
 
 
@@ -57,28 +72,28 @@ AdditiveUnit = function(...) {
 # == author
 # Zuguang Gu <z.gu@dkfz.de>
 #
-"+.AdditiveUnit" = function(x, y) {
-    if(inherits(x, "HeatmapAnnotation")) {
-    	if(x@which != "row") {
-    		stop_wrap("You should specify `which = row` or use `rowAnnotation()` directly if you want to add row annotations horizontally.")
-    	}
+"+.AdditiveUnit" <- function(x, y) {
+  if (inherits(x, "HeatmapAnnotation")) {
+    if (x@which != "row") {
+      stop_wrap("You should specify `which = row` or use `rowAnnotation()` directly if you want to add row annotations horizontally.")
     }
-    if(inherits(y, "HeatmapAnnotation")) {
-    	if(y@which != "row") {
-            stop_wrap("You should specify `which = row` or use `rowAnnotation()` directly if you want to add row annotations horizontally.")
-    	}
+  }
+  if (inherits(y, "HeatmapAnnotation")) {
+    if (y@which != "row") {
+      stop_wrap("You should specify `which = row` or use `rowAnnotation()` directly if you want to add row annotations horizontally.")
     }
-    if(is.null(x)) {
-        ht_list = new("HeatmapList")
-        ht_list@direction = "horizontal"
-        add_heatmap(ht_list, y)
-    } else if(is.null(y)) {
-        ht_list = new("HeatmapList")
-        ht_list@direction = "horizontal"
-        add_heatmap(ht_list, x)
-    } else {
-        add_heatmap(x, y)
-    }
+  }
+  if (is.null(x)) {
+    ht_list <- new("HeatmapList")
+    ht_list@direction <- "horizontal"
+    add_heatmap(ht_list, y)
+  } else if (is.null(y)) {
+    ht_list <- new("HeatmapList")
+    ht_list@direction <- "horizontal"
+    add_heatmap(ht_list, x)
+  } else {
+    add_heatmap(x, y)
+  }
 }
 
 
@@ -109,27 +124,26 @@ AdditiveUnit = function(...) {
 # == author
 # Zuguang Gu <z.gu@dkfz.de>
 #
-"%v%" = function(x, y) {
-    if(inherits(x, "HeatmapAnnotation")) {
-        if(x@which != "column") {
-            stop_wrap("You should specify `which = column` or use `columnAnnotation()` directly if you want to add column annotations vertically.")
-        }
+"%v%" <- function(x, y) {
+  if (inherits(x, "HeatmapAnnotation")) {
+    if (x@which != "column") {
+      stop_wrap("You should specify `which = column` or use `columnAnnotation()` directly if you want to add column annotations vertically.")
     }
-    if(inherits(y, "HeatmapAnnotation")) {
-        if(y@which != "column") {
-            stop_wrap("You should specify `which = column` or use `columnAnnotation()` directly if you want to add column annotations vertically.")
-        }
+  }
+  if (inherits(y, "HeatmapAnnotation")) {
+    if (y@which != "column") {
+      stop_wrap("You should specify `which = column` or use `columnAnnotation()` directly if you want to add column annotations vertically.")
     }
-    if(is.null(x)) {
-        ht_list = new("HeatmapList")
-        ht_list@direction = "vertical"
-        add_heatmap(ht_list, y, direction = "vertical")
-    } else if(is.null(y)) {
-        ht_list = new("HeatmapList")
-        ht_list@direction = "vertical"
-        add_heatmap(ht_list, x, direction = "vertical")
-    } else {
-        add_heatmap(x, y, direction = "vertical")
-    }
+  }
+  if (is.null(x)) {
+    ht_list <- new("HeatmapList")
+    ht_list@direction <- "vertical"
+    add_heatmap(ht_list, y, direction = "vertical")
+  } else if (is.null(y)) {
+    ht_list <- new("HeatmapList")
+    ht_list@direction <- "vertical"
+    add_heatmap(ht_list, x, direction = "vertical")
+  } else {
+    add_heatmap(x, y, direction = "vertical")
+  }
 }
-

@@ -1,4 +1,3 @@
-
 # stacked_simple = function(..., name, which = c("row", "column")) {
 # 	which = match.arg(which)
 # 	arg_list = list()
